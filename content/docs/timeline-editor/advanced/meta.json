@@ -1,0 +1,15 @@
+{
+  "title": "Advanced Guides",
+  "icon": "Settings",
+  "pages": [
+    "drag-and-drop",
+    "customization",
+    "scrolling",
+    "snapping",
+    "events-callbacks",
+    "action-config",
+    "transport-bar",
+    "loop-zone",
+    "cut-block"
+  ]
+}

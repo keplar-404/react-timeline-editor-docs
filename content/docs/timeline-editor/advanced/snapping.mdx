@@ -1,0 +1,39 @@
+---
+title: Snapping
+description: Assist users with precision alignment.
+---
+
+import { Callout } from "fumadocs-ui/components/callout";
+
+For applications like video editing or music production, absolute precision is required. "Snapping" helps the user snap actions exactly to grid lines or alongside other actions.
+
+## Grid Snapping
+
+Set `snapGrid={true}` to force actions to latch onto the nearest grid mark when they are dragged or resized.
+
+```tsx
+<Timeline
+  editorData={data}
+  onChange={setData}
+  effects={{}}
+  grid={true} // [!code highlight]
+  snapGrid={true} // [!code highlight]
+/>
+```
+
+<Callout type="info">
+  Grid snapping feels best when the visual `grid` property is also set to
+  `true`, giving the user a visual reference for where the block is snapping to.
+</Callout>
+
+## Auxiliary Line (Cursor) Snapping
+
+A common pattern in sequencers is to pull the playhead (cursor) to a specific spot, and then drag a block to snap exactly to it.
+
+```tsx
+<Timeline
+  snapCursor={true} // [!code highlight]
+/>
+```
+
+When `snapCursor` is enabled, an action block will automatically snap to the exact position of the playhead if dragged within a few pixels of it. This ensures perfect sync without having to zoom in and align manually.

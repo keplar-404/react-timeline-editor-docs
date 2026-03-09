@@ -1,0 +1,67 @@
+---
+title: Data Interface
+description: Understanding the core data structures that power the timeline.
+---
+
+import { Callout } from "fumadocs-ui/components/callout";
+
+To use `@keplar-404/react-timeline-editor` effectively, you need to understand its primary data structures.
+
+## TimelineRow
+
+A `TimelineRow` represents a single track or layer in your timeline. It holds an array of `TimelineAction` objects.
+
+| Property     | Description                           | Type               | Default      |
+| :----------- | :------------------------------------ | :----------------- | :----------- |
+| `id`         | Unique identifier for the row         | `string`           | **Required** |
+| `actions`    | List of actions belonging to this row | `TimelineAction[]` | **Required** |
+| `rowHeight`  | Custom row height                     | `number`           | Optional     |
+| `selected`   | Is the row currently selected?        | `boolean`          | `false`      |
+| `classNames` | Additional CSS classes for styling    | `string[]`         | Optional     |
+
+---
+
+## TimelineAction
+
+A `TimelineAction` is a specific block of time on a track. It has a start time, an end time, and points to an effect.
+
+| Property   | Description                         | Type      | Default      |
+| :--------- | :---------------------------------- | :-------- | :----------- |
+| `id`       | Action ID                           | `string`  | **Required** |
+| `start`    | Start time (in seconds)             | `number`  | **Required** |
+| `end`      | End time (in seconds)               | `number`  | **Required** |
+| `effectId` | Corresponds to an effect definition | `string`  | **Required** |
+| `flexible` | Can this action be resized?         | `boolean` | `true`       |
+| `movable`  | Can this action be moved (dragged)? | `boolean` | `true`       |
+| `disable`  | Prevent this action from running    | `boolean` | `false`      |
+
+---
+
+## TimelineEffect
+
+A `TimelineEffect` defines what actually _happens_ when the engine's playback head intersects with a `TimelineAction`.
+
+| Property | Description            | Type                   | Default      |
+| :------- | :--------------------- | :--------------------- | :----------- |
+| `id`     | Unique Effect ID       | `string`               | **Required** |
+| `name`   | Human-readable name    | `string`               | Optional     |
+| `source` | Runtime code/callbacks | `TimeLineEffectSource` | Optional     |
+
+<Callout type="info">
+  The `effects` dictionary passed to the `<Timeline />` component maps
+  `effectId` strings to these `TimelineEffect` objects. Multiple actions can
+  share the same effect (for example, multiple "Fade In" actions sharing the
+  same execution logic).
+</Callout>
+
+### TimeLineEffectSource
+
+The `source` object inside a `TimelineEffect` provides hooks to execute custom logic during playback:
+
+- **`enter`**: Fired when the playhead enters the action's time bounds.
+- **`leave`**: Fired when the playhead exits the action's bounds.
+- **`update`**: Fired continuously every frame while the playhead is inside the bounds.
+- **`start`**: Fired if playback starts from _within_ the action's bounds.
+- **`stop`**: Fired if playback is paused while _within_ the bounds.
+
+These hooks allow you to sync the timeline state with external video players, 3D canvases, or animation systems!

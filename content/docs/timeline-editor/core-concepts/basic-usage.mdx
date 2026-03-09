@@ -1,0 +1,63 @@
+---
+title: Basic Usage
+description: Build your first functional timeline editor.
+---
+
+import { Callout } from "fumadocs-ui/components/callout";
+
+Now that you have installed the package, let's create a functional timeline editor.
+
+## A Simple Editor
+
+The `<Timeline />` component takes your data and effects, and immediately provides a drag-and-drop sequencing interface.
+
+```tsx
+import React, { useState } from "react";
+import {
+  Timeline,
+  TimelineAction,
+  TimelineRow,
+} from "@keplar-404/react-timeline-editor";
+
+// 1. Define your initial data structure
+const initialData: TimelineRow[] = [
+  {
+    id: "track-1",
+    actions: [
+      {
+        id: "action-1",
+        start: 0,
+        end: 2,
+        effectId: "effect-1",
+      },
+    ],
+  },
+];
+
+export const MyEditor = () => {
+  // 2. Manage the timeline state
+  const [data, setData] = useState(initialData);
+
+  return (
+    <div style={{ height: "400px", width: "100%" }}>
+      {/* 3. Render the Timeline */}
+      <Timeline
+        editorData={data}
+        onChange={setData}
+        effects={{}}
+        autoScroll={true}
+      />
+    </div>
+  );
+};
+```
+
+### Try it out!
+
+Render this component in your application. You will see a timeline track with a single action spanning from 0 to 2 seconds. Because we enabled `autoScroll`, if you drag the action block to the right, the timeline will automatically pan to follow it!
+
+<Callout type="info">
+  Notice how we bind `editorData` to our state, and update that state via the
+  `onChange` callback. The timeline is a controlled component—it relies on you
+  to handle the data mutations when a user drags or resizes a block.
+</Callout>

@@ -1,0 +1,77 @@
+---
+title: Engine Runtime APIs
+description: API documentation for the standalone TimelineEngine.
+---
+
+import { Callout } from "fumadocs-ui/components/callout";
+
+The `TimelineEngine` maintains its own internal event listener schedule, independent of React renders or component lifecycles.
+
+## Instantiation
+
+```ts
+import { TimelineEngine } from "@keplar-404/timeline-engine";
+
+const engine = new TimelineEngine();
+```
+
+## Basic Methods
+
+### setPlayRate
+
+`(rate: number) => void`
+Sets the playback speed multiplier (e.g., `1` for normal, `2` for double speed).
+
+### getPlayRate
+
+`() => number`
+Gets the current playback speed multiplier.
+
+### setTime
+
+`(time: number) => void`
+Instantly seeks the engine to a specific time (in seconds). This will trigger event listeners if the time enters or leaves an action's range.
+
+### getTime
+
+`() => number`
+Gets the engine's current playback time.
+
+### play
+
+`(param: { toTime?: number; autoEnd?: boolean }) => boolean`
+Starts playing from the current time. Returns `true` if playback started successfully.
+
+- `toTime` (optional): The timestamp where playback should automatically stop.
+- `autoEnd` (optional): Whether to automatically pause after playing the final action in the dataset.
+
+### pause
+
+`() => void`
+Pauses the engine's internal ticker.
+
+---
+
+## Event Listeners
+
+You can hook into internal engine events to synchronize your external application (e.g., updating a React state or a Canvas overlay).
+
+```ts
+engine.on("setTimeByTick", ({ time, engine }) => {
+  // Runs every single requestAnimationFrame tick during playback
+  console.log("Tick time: ", time);
+});
+
+engine.on("play", () => {
+  console.log("Playback started");
+});
+
+engine.on("paused", () => {
+  console.log("Playback paused");
+});
+
+// Intercept manual time setting
+engine.on("beforeSetTime", ({ time }) => {
+  if (time < 0) return false; // Prevent seeking before 0
+});
+```

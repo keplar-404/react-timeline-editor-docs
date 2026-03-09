@@ -1,0 +1,60 @@
+---
+title: Installation & Setup
+description: Get up and running in minutes.
+---
+
+import { Step, Steps } from "fumadocs-ui/components/steps";
+import { Callout } from "fumadocs-ui/components/callout";
+import { Cards, Card } from "fumadocs-ui/components/card";
+
+<Steps>
+  <Step>
+    ## Install the Package
+
+    To get started, install `@keplar-404/react-timeline-editor` using npm:
+
+    ```bash
+    npm install @keplar-404/react-timeline-editor
+    ```
+
+  </Step>
+
+  <Step>
+    ## Render Your First Timeline
+
+    Import the `Timeline` component and render it with some empty configuration.
+
+    ```tsx
+    import React from 'react';
+    import { Timeline } from '@keplar-404/react-timeline-editor';
+
+    export const TimelineEditor = () => {
+      return (
+        <Timeline
+          editorData={[]}
+          effects={{}}
+        />
+      );
+    }
+    ```
+
+    <Callout type="info">
+      While this example renders an empty timeline, it confirms that your installation was successful and the component mounts correctly.
+    </Callout>
+
+  </Step>
+
+</Steps>
+
+## Next Steps
+
+Now that you have the component installed, it's time to learn how to inject actual data into it!
+
+<Cards>
+  <Card
+    href="/docs/timeline-editor/core-concepts/basic-usage"
+    title="Learn Basic Usage"
+  >
+    Configure your first tracks and actions.
+  </Card>
+</Cards>

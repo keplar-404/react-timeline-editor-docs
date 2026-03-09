@@ -1,0 +1,34 @@
+---
+title: Engine Introduction
+description: Run the timeline data headlessly, decoupled from the editor.
+---
+
+import { Callout } from "fumadocs-ui/components/callout";
+import { Cards, Card } from "fumadocs-ui/components/card";
+import { Settings } from "lucide-react";
+
+The `@keplar-404/timeline-engine` is extracted as a standalone package to provide complete parsing and playback logic for timeline data.
+
+While `@keplar-404/react-timeline-editor` heavily connects to this engine library for its internal split logic and runtime player, the engine itself is completely decoupled from the React DOM.
+
+## Motivation
+
+In complex front-end applications, your player (Canvas, WebGL, Video) and your editor (React GUI) might live in completely separate parts of your architecture.
+
+By extracting the `TimelineEngine` into its own vanilla JavaScript package, you can run the exact same parsing and playback logic in:
+
+- A Web Worker (to keep the UI thread smooth).
+- A Node.js server (for server-side validation or rendering).
+- A completely non-React rendering pipeline.
+
+## Core Concepts
+
+- 🛠 **Parsing**: Interprets the `TimelineRow` and `TimelineAction` arrays to determine what should be active at any given millisecond.
+- ⚙️ **Independent**: Can be used headless outside of any React tree.
+- ⚡ **Performant**: Optimized for high-frequency updates (60fps).
+
+<Cards>
+  <Card href="/docs/engine/api" title="Engine runtime APIs" icon={<Settings />}>
+    Explore the methods and event listeners available on the standalone engine.
+  </Card>
+</Cards>

@@ -1,17 +1,74 @@
 ---
-title: What is React Timeline Editor
-description: What is React Timeline Editor
+title: Introduction
+description: A high-performance, customizable timeline editor for React.
 ---
 
-## Code Block
+import { Callout } from "fumadocs-ui/components/callout";
+import { Cards, Card } from "fumadocs-ui/components/card";
+import { Rocket, Zap, Sliders, Layers, Scissors, Move } from "lucide-react";
 
-```js
-console.log("Hello World");
-```
+# React Timeline Editor
 
-## Cards
+A powerful React-based component library for quickly building comprehensive timeline animation and video editors.
+
+<Callout type="info">
+  **Credits:** This package is built on top of and derived from the excellent
+  work by
+  [@xzdarcy/react-timeline-editor](https://github.com/xzdarcy/react-timeline-editor).
+  Full credit for the original fundamental engine and architecture goes to
+  [@xzdarcy](https://github.com/xzdarcy). This version by
+  [@keplar-404](https://github.com/keplar-404) is a heavily extended fork
+  introducing major custom capabilities.
+</Callout>
+
+![](/assets/timeline.gif)
+
+## Core Capabilities
+
+- **Scalability**: High-performance rendering for thousands of action blocks.
+- **Precision**: Built-in support for zooming and snapping to flexible grid intervals.
+- **Independent Engine**: The engine logic is cleanly separated from the React DOM for headless use.
+
+## New Fork Features
+
+- **Row Drag Sorting**: Native ability to drag and reorder entire track rows vertically.
+- **Cross-Row Dragging**: Move action blocks seamlessly between different tracks with ghost previews.
+- **Cut Block Mechanism**: A built-in "Blade" tool to slice and split timeline actions dynamically.
+- **Transport Controls**: Pre-built UI components for Play, Pause, Seek, and Loop regions.
 
 <Cards>
-  <Card title="Learn more about Next.js" href="https://nextjs.org/docs" />
-  <Card title="Learn more about Fumadocs" href="https://fumadocs.dev" />
+  <Card
+    href="/docs/timeline-editor/getting-started/installation"
+    title="Quick Start"
+    icon={<Rocket />}
+  >
+    Get up and running in under 5 minutes.
+  </Card>
+  <Card
+    href="/docs/timeline-editor/core-concepts/basic-usage"
+    title="Explore Concepts"
+    icon={<Zap />}
+  >
+    Learn about Rows, Actions, and Effects.
+  </Card>
+</Cards>
+
+## Advanced Feature Highlights
+
+<Cards>
+  <Card
+    href="/docs/timeline-editor/advanced/drag-and-drop"
+    title="Drag & Drop Sorting"
+    icon={<Move />}
+  />
+  <Card
+    href="/docs/timeline-editor/advanced/cut-block"
+    title="Blade / Cut Tool"
+    icon={<Scissors />}
+  />
+  <Card
+    href="/docs/timeline-editor/advanced/transport-bar"
+    title="Playback Controls"
+    icon={<Sliders />}
+  />
 </Cards>

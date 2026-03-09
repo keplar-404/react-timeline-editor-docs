@@ -1,0 +1,41 @@
+---
+title: Events & Callbacks
+description: Hooking into the lifecycle of user interaction.
+---
+
+`@keplar-404/react-timeline-editor` emits events across the entire lifecycle of a user interaction.
+
+## Playhead (Cursor) Callbacks
+
+When the user scrubs the playhead:
+
+- `onCursorDragStart(time: number)`
+- `onCursorDrag(time: number)`
+- `onCursorDragEnd(time: number)`
+- `onCursorChange(time: number)` - Useful for syncing an external video player
+
+## Action Manipulation Callbacks
+
+Each phase of picking up, moving, and dropping an action is broadcasted:
+
+### Moving
+
+- `onActionMovingStart(action: TimelineAction)`
+- `onActionMoving(action: TimelineAction)`
+- `onActionMovingEnd(action: TimelineAction)`
+
+### Resizing
+
+- `onActionResizingStart(action: TimelineAction, dir: 'left' | 'right')`
+- `onActionResizing(action: TimelineAction, dir: 'left' | 'right')`
+- `onActionResizingEnd(action: TimelineAction, dir: 'left' | 'right')`
+
+### Changing
+
+- `onActionChange(action: TimelineAction)` - Fired after moving or resizing finishes.
+
+## Mouse & Area Interactions
+
+- `onActionClick` / `onActionContextmenu`
+- `onAreaClick` / `onAreaContextmenu` - Fired when the user clicks empty space in a track row.
+- `onAreaDragStart` / `onAreaDrag` / `onAreaDragEnd` - Can be used to implement lasso selection or range creation.

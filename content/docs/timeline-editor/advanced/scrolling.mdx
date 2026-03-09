@@ -1,0 +1,46 @@
+---
+title: Scrolling & Auto-scroll
+description: Keep your timeline and custom sidebars perfectly in sync.
+---
+
+import { Callout } from "fumadocs-ui/components/callout";
+
+When working with long durations, scrolling is inevitable. Both the editor interface itself and external (wrapping) user interfaces can interact with the scroll state.
+
+## Auto-Scroll
+
+If a user drags an action block off the edge of the visible screen (either to the left or to the right), it is tedious for them to drop it, scroll the container, pick it up again, and repeat.
+
+You can solve this with one prop:
+
+```tsx
+<Timeline autoScroll={true} /> // [!code highlight]
+```
+
+When enabled, the timeline viewport will smoothly pan alongside the cursor when it approaches the boundaries of the component.
+
+## Scroll Synchronization
+
+Often, you'll be building custom UI _around_ the timeline component (for example, custom layer names, track lock buttons, or a play/pause header). When you scroll the timeline vertically to see more tracks, you need your custom sidebars to scroll with it precisely.
+
+### onScroll Callback
+
+The timeline fires an `onScroll` event whenever its internal layout shifts.
+
+```tsx
+<Timeline
+  onScroll={({ scrollTop }) => {
+    // Apply this scrollTop to your custom sidebar layer list
+    mySidebarRef.current.scrollTop = scrollTop;
+  }}
+/>
+```
+
+### Programmatic Scrolling
+
+Conversely, if a user scrolls your external sidebar, you need the timeline to follow. You can use the component's internal exposed refs to adjust its scroll position. (See API reference for `setScrollTop`).
+
+<Callout type="info">
+  Remember, for horizontally extended timelines, the `scale` setting controls
+  how condensed or expanded your total timeline surface area is!
+</Callout>

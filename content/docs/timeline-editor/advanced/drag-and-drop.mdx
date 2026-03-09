@@ -1,0 +1,61 @@
+---
+title: Drag & Drop
+description: Reorder tracks and move actions between rows.
+---
+
+import { Callout } from "fumadocs-ui/components/callout";
+
+`@keplar-404/react-timeline-editor` introduces advanced drag-and-drop capabilities that go beyond simple time seeking. You can reorder entire tracks or move actions across different rows.
+
+## 1. Row Reordering (Track Sorting)
+
+You can allow users to vertically drag row headers to reorder the entire timeline data structure.
+
+### Enabling Row Drag
+
+Enable this feature by setting `enableRowDrag={true}`. You must also handle the `onRowDragEnd` event to update your data's order.
+
+```tsx
+<Timeline
+  editorData={data}
+  onChange={setData}
+  enableRowDrag={true} // [!code highlight]
+  onRowDragEnd={({ row, editorData }) => {
+    // The engine calculates the new sorted array for you!
+    setData(editorData);
+  }}
+/>
+```
+
+When enabled, the row headers become draggable handles.
+
+---
+
+## 2. Cross-Row Action Dragging
+
+Standard timelines often restrict actions to their original track. This fork allows you to drag an action block vertically into a different row.
+
+### Enabling Cross-Row Drag
+
+Set `enableCrossRowDrag={true}` to allow vertical movement between tracks.
+
+```tsx
+<Timeline
+  editorData={data}
+  onChange={setData}
+  effects={effects}
+  enableCrossRowDrag={true} // [!code highlight]
+/>
+```
+
+### Ghost Previews
+
+When dragging a block between rows, the editor displays a "Ghost Preview" that follows the cursor to indicate where the block will land.
+
+- **`enableGhostPreview`**: (Default `true`) Toggles the visibility of the preview.
+- **`getGhostPreview`**: Allows you to provide a custom React node for the preview. See [Customization](/docs/timeline-editor/advanced/customization) for details.
+
+<Callout type="warning">
+  Ensure that the target row has a valid `TimelineEffect` for the block being
+  moved, or use `onActionMoving` to validate/prevent illegal moves!
+</Callout>

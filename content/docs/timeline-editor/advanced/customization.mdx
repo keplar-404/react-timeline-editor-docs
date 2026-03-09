@@ -1,0 +1,83 @@
+---
+title: Customization & Styling
+description: Make the timeline editor look exactly how you want.
+---
+
+import { Callout } from "fumadocs-ui/components/callout";
+
+`@keplar-404/react-timeline-editor` is built to be styled. You can customize the look of the timeline via CSS, or by taking complete control of the rendering logic for individual actions and drag previews.
+
+## 1. Custom Action Rendering
+
+You can entirely replace how action blocks are rendered using the `getActionRender` property. This allows you to render complex UI (like thumbnails or waveforms) inside the blocks.
+
+```tsx
+<Timeline
+  editorData={data}
+  onChange={setData}
+  effects={{}}
+  getActionRender={(action, row) => {
+    return (
+      <div className="custom-action-block">
+        <strong>{action.id}</strong>
+        <span>{action.data?.label}</span>
+      </div>
+    );
+  }}
+/>
+```
+
+---
+
+## 2. Custom Ghost Previews (Dragging)
+
+When a user drags a block across different rows (using `enableCrossRowDrag`), the editor displays a "Ghost Preview" that follows the mouse cursor.
+
+By default, this preview is a generic blue glowing box. However, you can use the `getGhostPreview` prop to render a React node that completely matches the exact appearance of your block.
+
+```tsx
+<Timeline
+  editorData={data}
+  effects={{}}
+  onChange={setData}
+  enableCrossRowDrag={true}
+  // Render the ghost block
+  getGhostPreview={({ action, row }) => (
+    <div className="custom-ghost-preview">
+      <span>Dragging: {action.id}</span>
+    </div>
+  )}
+/>
+```
+
+---
+
+## 3. CSS Overrides
+
+The timeline components use specific class names that you can target in your CSS.
+
+- `.timeline-editor`: The outer container.
+- `.timeline-row`: Individual track rows.
+- `.timeline-action`: The draggable action blocks.
+
+### Row-Specific Classes
+
+You can assign unique classes to specific rows in your data:
+
+```ts
+const data = [
+  {
+    id: "track-1",
+    classNames: ["my-special-track"], // [!code highlight]
+    actions: [],
+  },
+];
+```
+
+## 4. Scale & Ruler Customization
+
+Control the timeline ruler at the top using these key props.
+
+- **`scale`**: Defines seconds per mark. Default is `1`.
+- **`scaleWidth`**: Defines pixel width of a mark. Default is `160`.
+- **`getScaleRender`**: Customize the visual rendering of the top ruler marks.

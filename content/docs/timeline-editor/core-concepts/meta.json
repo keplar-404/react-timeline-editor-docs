@@ -1,0 +1,9 @@
+{
+  "title": "Core Concepts",
+  "icon": "BookOpen",
+  "pages": [
+    "basic-usage",
+    "data-interface",
+    "props"
+  ]
+}

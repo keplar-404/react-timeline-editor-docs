@@ -1,6 +1,7 @@
 import { source } from '@/lib/source';
 import { DocsLayout } from 'fumadocs-ui/layouts/docs';
 import { baseOptions } from '@/lib/layout.shared';
+import { ChartGantt, Cpu } from 'lucide-react';
 
 export default function Layout({ children }: LayoutProps<'/docs'>) {
   return (
@@ -12,11 +13,13 @@ export default function Layout({ children }: LayoutProps<'/docs'>) {
             title: 'Timeline Editor',
             description: 'Introduction to Timeline Editor',
             url: '/docs/timeline-editor',
+            icon: <ChartGantt size={"15px"}/>
           },
           {
-            title: 'Components',
-            description: 'Explore the available components',
-            url: '/docs/components',
+            title: 'Engine',
+            description: 'Explore the timeline engine API',
+            url: '/docs/engine',
+            icon: <Cpu size={"15px"}/>
           },
         ],
       }}

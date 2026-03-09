@@ -1,0 +1,101 @@
+---
+title: Props & Data Interfaces
+description: Comprehensive guide to the data structures and component properties.
+---
+
+import { Callout } from "fumadocs-ui/components/callout";
+
+The React Timeline Editor interacts primarily with three core interfaces: `TimelineRow`, `TimelineAction`, and `TimelineEffect`.
+
+## Core Data Interfaces
+
+### TimelineRow
+
+Represents a track or row in the timeline.
+
+| Property     | Type               | Description                                           |
+| :----------- | :----------------- | :---------------------------------------------------- |
+| `id`         | `string`           | **(Required)** Unique identifier for the row.         |
+| `actions`    | `TimelineAction[]` | **(Required)** List of actions contained in this row. |
+| `classNames` | `string[]`         | Custom CSS classes for the row element.               |
+| `selected`   | `boolean`          | Whether the row is currently selected.                |
+
+### TimelineAction
+
+Represents a specific block of time (an "action") within a row.
+
+| Property   | Type            | Description                                            |
+| :--------- | :-------------- | :----------------------------------------------------- |
+| `id`       | `string`        | **(Required)** Unique identifier for the action.       |
+| `start`    | `number`        | **(Required)** Start time in seconds.                  |
+| `end`      | `number`        | **(Required)** End time in seconds.                    |
+| `effectId` | `string`        | **(Required)** ID of the effect defining this action.  |
+| `movable`  | `boolean`       | Whether the block can be dragged (Defaults to `true`). |
+| `flexible` | `boolean`       | Whether the block can be resized (Defaults to `true`). |
+| `style`    | `CSSProperties` | Inline styles for the block.                           |
+| `data`     | `any`           | Custom metadata attached to the action.                |
+
+### TimelineEffect
+
+Defines the behavior or "type" of an action (e.g., Video, Audio, Text).
+
+| Property | Type     | Description                                      |
+| :------- | :------- | :----------------------------------------------- |
+| `id`     | `string` | **(Required)** Unique identifier for the effect. |
+| `name`   | `string` | **(Required)** Display name.                     |
+
+---
+
+## Editor Props (`<Timeline />`)
+
+### Core Configuration
+
+| Property     | Type                             | Default  | Description                               |
+| :----------- | :------------------------------- | :------- | :---------------------------------------- |
+| `editorData` | `TimelineRow[]`                  | -        | **(Required)** The main dataset.          |
+| `effects`    | `Record<string, TimelineEffect>` | -        | **(Required)** Map of effect definitions. |
+| `onChange`   | `(data: TimelineRow[]) => void`  | -        | Triggered on any data change.             |
+| `engine`     | `ITimelineEngine`                | internal | Provide a custom engine instance.         |
+
+### Display & Scale
+
+| Property          | Type      | Default | Description                        |
+| :---------------- | :-------- | :------ | :--------------------------------- |
+| `scale`           | `number`  | `1`     | Scaling factor (seconds per mark). |
+| `scaleWidth`      | `number`  | `160`   | Width of one scale unit (px).      |
+| `scaleSplitCount` | `number`  | `10`    | Grid subdivisions per unit.        |
+| `rowHeight`       | `number`  | `32`    | Height of each row (px).           |
+| `startLeft`       | `number`  | `20`    | Left padding for scale (px).       |
+| `hideCursor`      | `boolean` | `false` | Completely hide the playhead.      |
+
+### Advanced Features (New)
+
+| Property             | Type      | Default | Description                         |
+| :------------------- | :-------- | :------ | :---------------------------------- |
+| `enableRowDrag`      | `boolean` | `false` | Enable vertical track reordering.   |
+| `enableCrossRowDrag` | `boolean` | `false` | Allow dragging blocks between rows. |
+| `gridSnap`           | `boolean` | `false` | Snap blocks to grid lines.          |
+| `dragLine`           | `boolean` | `false` | Show vertical alignment lines.      |
+| `autoScroll`         | `boolean` | `false` | Scroll when dragging near edges.    |
+
+### Custom Renderers
+
+| Property          | Type                             | Description                                        |
+| :---------------- | :------------------------------- | :------------------------------------------------- |
+| `getActionRender` | `(action, row) => ReactNode`     | Fully customize the action block UI.               |
+| `getGhostPreview` | `({ action, row }) => ReactNode` | **(New)** Customize the block preview during drag. |
+| `getScaleRender`  | `(scale) => ReactNode`           | Customize the top ruler marks.                     |
+
+## Event Callbacks
+
+<Callout type="info">
+  Most callbacks provide the current state of the object being interacted with.
+</Callout>
+
+- `onActionMoveStart`: `({ action, row }) => void`
+- `onActionMoving`: `({ action, row, start, end }) => void | boolean` (Return `false` to block)
+- `onActionMoveEnd`: `({ action, row, start, end }) => void`
+- `onRowDragStart`: `({ row }) => void`
+- `onRowDragEnd`: `({ row, editorData }) => void`
+- `onClickAction`: `(e, { action, row, time }) => void`
+- `onClickRow`: `(e, { row, time }) => void`

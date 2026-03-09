@@ -1,0 +1,54 @@
+---
+title: Action Configuration
+description: Fine-tune constraints on specific actions.
+---
+
+import { Callout } from "fumadocs-ui/components/callout";
+
+Not all timeline blocks are created equal. You may want a background music track to be immovable, or an intro sequence to be restricted from being dragged past the 5-second mark.
+
+You can configure these rules on a per-action basis within the `TimelineAction` datastructure.
+
+## Controlling Interaction
+
+### Movable & Flexible
+
+- **`movable`**: Set to `false` to prevent the user from dragging the block horizontally.
+- **`flexible`**: Set to `false` to prevent the user from resizing the block's length.
+
+```ts
+const actions = [
+  {
+    id: "locked-action",
+    start: 0,
+    end: 10,
+    effectId: "static-effect",
+    movable: false, // [!code highlight]
+    flexible: false, // [!code highlight]
+  },
+];
+```
+
+## Time Boundaries
+
+You can enforce bounds on where a specific action block can travel on the timeline using `minStart` and `maxEnd`.
+
+```ts
+const actions = [
+  {
+    id: "bounded-action",
+    start: 2,
+    end: 5,
+    effectId: "effect-1",
+    minStart: 1, // Cannot be dragged left of 1s // [!code highlight]
+    maxEnd: 10, // Cannot be dragged right of 10s or resized past 10s // [!code highlight]
+  },
+];
+```
+
+<Callout type="info">
+  These rules apply to user UI interactions. If you programmatically update the
+  `editorData` state completely ignoring these rules, the timeline will render
+  what you tell it—but the UI drag/resize handlers will respect these
+  constraints perfectly!
+</Callout>
