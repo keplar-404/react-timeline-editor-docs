@@ -1,0 +1,56 @@
+---
+title: Auto Scroll
+description: Automatically pan the timeline when dragging action blocks near the edges.
+---
+
+When dragging an action block close to the left or right edge of the visible timeline area, the timeline can automatically scroll to reveal hidden time.
+
+## Usage
+
+Simply pass `autoScroll={true}` to the `<Timeline>` component:
+
+```tsx
+import { Timeline, TimelineRow, TimelineEffect } from '@keplar-404/react-timeline-editor';
+import React, { useState } from 'react';
+
+const mockData: TimelineRow[] = [
+  {
+    id: '0',
+    actions: [
+      {
+        id: 'action00',
+        start: 0,
+        end: 2,
+        effectId: 'effect0',
+      },
+    ],
+  },
+];
+
+const mockEffect: Record<string, TimelineEffect> = {
+  effect0: { id: 'effect0', name: 'Effect 0' },
+};
+
+export const EditorAutoScroll = () => {
+  const [data, setData] = useState(mockData);
+
+  return (
+    <div style={{ width: '500px', border: '1px solid #333' }}>
+      <Timeline
+        editorData={data}
+        effects={mockEffect}
+        onChange={setData}
+        autoScroll={true}
+      />
+    </div>
+  );
+};
+```
+
+The auto-scroll kicks in when you drag near or slightly past the visible edge of the timeline, making it easy to place actions beyond the initial viewport without first needing to scroll.
+
+## When to Use
+
+- **Long timelines** where action blocks span beyond the initial visible width
+- **Multiple track editors** where drag-to-reorder may overshoot the visible area
+- **Default-on recommendation**: Most timeline editors benefit from enabling `autoScroll`

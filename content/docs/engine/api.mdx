@@ -1,77 +1,247 @@
 ---
-title: Engine Runtime APIs
-description: API documentation for the standalone TimelineEngine.
+title: Engine Runtime API
+description: Complete API reference for the standalone TimelineEngine class from @keplar-404/timeline-engine.
 ---
 
 import { Callout } from "fumadocs-ui/components/callout";
 
-The `TimelineEngine` maintains its own internal event listener schedule, independent of React renders or component lifecycles.
+The `TimelineEngine` is a standalone, framework-agnostic playback engine. It can be used independently of React, in a Web Worker, or embedded inside the editor via the `engine` prop.
 
-## Instantiation
-
-```ts
-import { TimelineEngine } from "@keplar-404/timeline-engine";
+```typescript
+import { TimelineEngine } from '@keplar-404/timeline-engine';
 
 const engine = new TimelineEngine();
 ```
 
-## Basic Methods
+---
 
-### setPlayRate
+## Properties
 
-`(rate: number) => void`
-Sets the playback speed multiplier (e.g., `1` for normal, `2` for double speed).
+### `isPlaying`
 
-### getPlayRate
+```typescript
+isPlaying: boolean
+```
 
-`() => number`
-Gets the current playback speed multiplier.
-
-### setTime
-
-`(time: number) => void`
-Instantly seeks the engine to a specific time (in seconds). This will trigger event listeners if the time enters or leaves an action's range.
-
-### getTime
-
-`() => number`
-Gets the engine's current playback time.
-
-### play
-
-`(param: { toTime?: number; autoEnd?: boolean }) => boolean`
-Starts playing from the current time. Returns `true` if playback started successfully.
-
-- `toTime` (optional): The timestamp where playback should automatically stop.
-- `autoEnd` (optional): Whether to automatically pause after playing the final action in the dataset.
-
-### pause
-
-`() => void`
-Pauses the engine's internal ticker.
+Whether the engine is currently playing.
 
 ---
 
-## Event Listeners
+### `isPaused`
 
-You can hook into internal engine events to synchronize your external application (e.g., updating a React state or a Canvas overlay).
+```typescript
+isPaused: boolean
+```
 
-```ts
-engine.on("setTimeByTick", ({ time, engine }) => {
-  // Runs every single requestAnimationFrame tick during playback
-  console.log("Tick time: ", time);
-});
+Whether the engine is currently paused.
 
-engine.on("play", () => {
-  console.log("Playback started");
-});
+---
 
-engine.on("paused", () => {
-  console.log("Playback paused");
-});
+### `effects` *(setter)*
 
-// Intercept manual time setting
-engine.on("beforeSetTime", ({ time }) => {
-  if (time < 0) return false; // Prevent seeking before 0
+```typescript
+set effects(effects: Record<string, TimelineEffect>)
+```
+
+Update the running effects map. Changes take effect at the next playback tick.
+
+---
+
+### `data` *(setter)*
+
+```typescript
+set data(data: TimelineRow[])
+```
+
+Update the running row/action data.
+
+---
+
+## Methods
+
+### `setPlayRate(rate: number): void`
+
+Set the playback speed multiplier.
+
+```typescript
+engine.setPlayRate(2.0); // 2x speed
+```
+
+---
+
+### `getPlayRate(): number`
+
+Get the current playback rate.
+
+---
+
+### `setTime(time: number): void`
+
+Seek to a specific time position. Fires `beforeSetTime` / `afterSetTime` events.
+
+```typescript
+engine.setTime(10); // Jump to 10 seconds
+```
+
+---
+
+### `getTime(): number`
+
+Get the current playback time position.
+
+---
+
+### `reRender(): void`
+
+Re-trigger `update` callbacks on all active actions at the current time, without advancing playback.
+
+---
+
+### `play(param?): boolean`
+
+Start playing from the current time. Returns `true` if playback started successfully.
+
+```typescript
+engine.play({ autoEnd: true });
+engine.play({ toTime: 30 }); // Stop at 30 seconds
+```
+
+| Param | Type | Description |
+|:---|:---|:---|
+| `toTime` | `number` | Stop at this time |
+| `autoEnd` | `boolean` | Stop automatically when all actions complete |
+
+---
+
+### `pause(): void`
+
+Pause playback.
+
+---
+
+## Events
+
+Subscribe to events via `engine.listener.on(event, handler)` or the shorthand `engine.on(event, handler)`.
+
+### `setTimeByTick`
+
+Fired every animation frame during playback. Use this to sync your UI time display.
+
+```typescript
+engine.listener.on('setTimeByTick', ({ time, engine }) => {
+  console.log('Tick time:', time);
 });
 ```
+
+---
+
+### `beforeSetTime`
+
+Fired **before** a manual `setTime`. Return `false` to **prevent** the seek.
+
+```typescript
+engine.listener.on('beforeSetTime', ({ time, engine }) => {
+  if (time < 0) return false; // block negative seek
+});
+```
+
+---
+
+### `afterSetTime`
+
+Fired **after** a manual `setTime` completes.
+
+```typescript
+engine.listener.on('afterSetTime', ({ time, engine }) => {
+  console.log('Seeked to:', time);
+});
+```
+
+---
+
+### `beforeSetPlayRate`
+
+Fired **before** `setPlayRate`. Return `false` to **prevent** the rate change.
+
+```typescript
+engine.listener.on('beforeSetPlayRate', ({ rate, engine }) => {
+  if (rate > 2) return false; // cap at 2x
+});
+```
+
+---
+
+### `afterSetPlayRate`
+
+Fired **after** `setPlayRate` completes.
+
+---
+
+### `play`
+
+Fired when playback starts.
+
+```typescript
+engine.listener.on('play', ({ engine }) => {
+  console.log('Playback started');
+});
+```
+
+---
+
+### `paused`
+
+Fired when playback is paused.
+
+---
+
+### `ended`
+
+Fired when playback finishes (reaches `toTime` or all actions complete with `autoEnd: true`).
+
+---
+
+## Events at a Glance
+
+| Event | When it fires | Can cancel? |
+|:---|:---|:---|
+| `setTimeByTick` | Every animation frame during playback | No |
+| `beforeSetTime` | Before a manual `setTime` | ✅ Return `false` |
+| `afterSetTime` | After a manual `setTime` | No |
+| `beforeSetPlayRate` | Before `setPlayRate` | ✅ Return `false` |
+| `afterSetPlayRate` | After `setPlayRate` | No |
+| `play` | Playback starts | No |
+| `paused` | Playback pauses | No |
+| `ended` | Playback finishes | No |
+
+---
+
+## Complete Integration Example
+
+```typescript
+import { TimelineEngine } from '@keplar-404/timeline-engine';
+
+const engine = new TimelineEngine();
+
+// Set data before playing
+engine.data = myTimelineRows;
+engine.effects = myEffects;
+
+// Subscribe to ticks
+engine.listener.on('setTimeByTick', ({ time }) => {
+  updateMyUITimeDisplay(time);
+});
+
+engine.listener.on('ended', () => {
+  console.log('Playback complete');
+});
+
+// Start playing
+engine.setTime(0);
+engine.play({ autoEnd: true });
+```
+
+<Callout type="tip">
+  When used inside `<Timeline />`, the engine is already configured automatically.
+  Access it via `timelineRef.current.listener` for event subscriptions.
+</Callout>

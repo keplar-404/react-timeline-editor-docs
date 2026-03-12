@@ -1,60 +1,161 @@
 ---
 title: Installation & Setup
-description: Get up and running in minutes.
+description: Install @keplar-404/react-timeline-editor and @keplar-404/timeline-engine and render your first timeline in minutes.
 ---
 
 import { Step, Steps } from "fumadocs-ui/components/steps";
 import { Callout } from "fumadocs-ui/components/callout";
 import { Cards, Card } from "fumadocs-ui/components/card";
+import { Tab, Tabs } from "fumadocs-ui/components/tabs";
 
 <Steps>
   <Step>
-    ## Install the Package
+    ## Install the Packages
 
-    To get started, install `@keplar-404/react-timeline-editor` using npm:
+    Both packages are required. The `react-timeline-editor` provides the React component,
+    while `timeline-engine` provides the standalone playback logic they both share.
 
-    ```bash
-    npm install @keplar-404/react-timeline-editor
-    ```
+    <Tabs items={["npm", "bun", "pnpm", "yarn"]}>
+      <Tab value="npm">
+      ```bash
+      npm install @keplar-404/react-timeline-editor @keplar-404/timeline-engine
+      ```
+      </Tab>
+      <Tab value="bun">
+      ```bash
+      bun add @keplar-404/react-timeline-editor @keplar-404/timeline-engine
+      ```
+      </Tab>
+      <Tab value="pnpm">
+      ```bash
+      pnpm add @keplar-404/react-timeline-editor @keplar-404/timeline-engine
+      ```
+      </Tab>
+      <Tab value="yarn">
+      ```bash
+      yarn add @keplar-404/react-timeline-editor @keplar-404/timeline-engine
+      ```
+      </Tab>
+    </Tabs>
+
+  </Step>
+
+  <Step>
+    ## Import the CSS Stylesheet
+
+    The timeline component requires its stylesheet to render correctly. Import it once — either in your global CSS file or directly in your component.
+
+    <Tabs items={["Global CSS (recommended)", "Component"]}>
+      <Tab value="Global CSS (recommended)">
+      Add this to your `global.css` (or equivalent entry stylesheet):
+      ```css
+      @import '@keplar-404/react-timeline-editor/dist/react-timeline-editor.css';
+      ```
+      </Tab>
+      <Tab value="Component">
+      Import it at the top of any file that renders `<Timeline />`:
+      ```tsx
+      import '@keplar-404/react-timeline-editor/dist/react-timeline-editor.css';
+      ```
+      </Tab>
+    </Tabs>
+
+    <Callout type="warn">
+      Skipping this import will result in an unstyled, broken-looking timeline.
+    </Callout>
 
   </Step>
 
   <Step>
     ## Render Your First Timeline
 
-    Import the `Timeline` component and render it with some empty configuration.
+    The `<Timeline />` component requires two props: `editorData` (your track data) and `effects` (the effect definitions).
 
     ```tsx
-    import React from 'react';
-    import { Timeline } from '@keplar-404/react-timeline-editor';
+    import React, { useState } from 'react';
+    import { Timeline, TimelineRow, TimelineEffect } from '@keplar-404/react-timeline-editor';
+    import '@keplar-404/react-timeline-editor/dist/react-timeline-editor.css';
+
+    const mockData: TimelineRow[] = [
+      {
+        id: 'track-1',
+        actions: [
+          {
+            id: 'action-1',
+            start: 0,   // Start time in seconds
+            end: 2,     // End time in seconds
+            effectId: 'effect-0',
+          },
+        ],
+      },
+    ];
+
+    const mockEffect: Record<string, TimelineEffect> = {
+      'effect-0': {
+        id: 'effect-0',
+        name: 'Example Effect',
+      },
+    };
 
     export const TimelineEditor = () => {
+      const [data, setData] = useState<TimelineRow[]>(mockData);
+
       return (
         <Timeline
-          editorData={[]}
-          effects={{}}
+          editorData={data}
+          effects={mockEffect}
+          onChange={(newData) => setData(newData)}
         />
       );
-    }
+    };
     ```
 
     <Callout type="info">
-      While this example renders an empty timeline, it confirms that your installation was successful and the component mounts correctly.
+      The `<Timeline />` is a **controlled component**. You manage the data in state, and pass
+      updates back via the `onChange` callback. The timeline will call `onChange` whenever the
+      user drags or resizes an action block.
     </Callout>
+
+  </Step>
+
+  <Step>
+    ## (Optional) Enable Auto-Scroll
+
+    If users drag action blocks near the timeline edge, you can enable automatic panning:
+
+    ```tsx
+    <Timeline
+      editorData={data}
+      effects={mockEffect}
+      onChange={setData}
+      autoScroll={true}  // Scroll the timeline when dragging near edges
+    />
+    ```
 
   </Step>
 
 </Steps>
 
-## Next Steps
+<Callout type="info">
+  **Attribution:** This package is built on top of and derived from
+  [@xzdarcy/react-timeline-editor](https://github.com/xzdarcy/react-timeline-editor).
+  Full credit for the original fundamental engine and architecture goes to [@xzdarcy](https://github.com/xzdarcy).
+  This fork by [@keplar-404](https://github.com/keplar-404) introduces major custom capabilities.
+</Callout>
 
-Now that you have the component installed, it's time to learn how to inject actual data into it!
+## Next Steps
 
 <Cards>
   <Card
-    href="/docs/timeline-editor/core-concepts/basic-usage"
-    title="Learn Basic Usage"
+    href="/docs/timeline-editor/core-concepts/data-interface"
+    title="Data Interface"
   >
-    Configure your first tracks and actions.
+    Learn about TimelineRow, TimelineAction, and TimelineEffect types.
+  </Card>
+  <Card
+    href="/docs/timeline-editor/core-concepts/basic-usage"
+    title="Basic Usage"
+  >
+    See a full working example with multiple tracks and actions.
   </Card>
 </Cards>

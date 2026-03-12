@@ -1,0 +1,11 @@
+{
+  "title": "API Reference",
+  "icon": "FileCode",
+  "pages": [
+    "timeline-props",
+    "data-interface",
+    "transport-bar",
+    "loop-zone",
+    "cut-overlay"
+  ]
+}

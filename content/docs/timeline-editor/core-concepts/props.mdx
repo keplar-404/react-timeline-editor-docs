@@ -1,101 +1,168 @@
 ---
-title: Props & Data Interfaces
-description: Comprehensive guide to the data structures and component properties.
+title: Timeline Props
+description: Complete props reference for the <Timeline /> component from @keplar-404/react-timeline-editor.
 ---
 
 import { Callout } from "fumadocs-ui/components/callout";
 
-The React Timeline Editor interacts primarily with three core interfaces: `TimelineRow`, `TimelineAction`, and `TimelineEffect`.
+## Required Props
 
-## Core Data Interfaces
-
-### TimelineRow
-
-Represents a track or row in the timeline.
-
-| Property     | Type               | Description                                           |
-| :----------- | :----------------- | :---------------------------------------------------- |
-| `id`         | `string`           | **(Required)** Unique identifier for the row.         |
-| `actions`    | `TimelineAction[]` | **(Required)** List of actions contained in this row. |
-| `classNames` | `string[]`         | Custom CSS classes for the row element.               |
-| `selected`   | `boolean`          | Whether the row is currently selected.                |
-
-### TimelineAction
-
-Represents a specific block of time (an "action") within a row.
-
-| Property   | Type            | Description                                            |
-| :--------- | :-------------- | :----------------------------------------------------- |
-| `id`       | `string`        | **(Required)** Unique identifier for the action.       |
-| `start`    | `number`        | **(Required)** Start time in seconds.                  |
-| `end`      | `number`        | **(Required)** End time in seconds.                    |
-| `effectId` | `string`        | **(Required)** ID of the effect defining this action.  |
-| `movable`  | `boolean`       | Whether the block can be dragged (Defaults to `true`). |
-| `flexible` | `boolean`       | Whether the block can be resized (Defaults to `true`). |
-| `style`    | `CSSProperties` | Inline styles for the block.                           |
-| `data`     | `any`           | Custom metadata attached to the action.                |
-
-### TimelineEffect
-
-Defines the behavior or "type" of an action (e.g., Video, Audio, Text).
-
-| Property | Type     | Description                                      |
-| :------- | :------- | :----------------------------------------------- |
-| `id`     | `string` | **(Required)** Unique identifier for the effect. |
-| `name`   | `string` | **(Required)** Display name.                     |
+| Property | Type | Description |
+|:---|:---|:---|
+| `editorData` | `TimelineRow[]` | **(Required)** Timeline editing data — the list of track rows |
+| `effects` | `Record<string, TimelineEffect>` | **(Required)** Map of all possible effect instances |
 
 ---
 
-## Editor Props (`<Timeline />`)
+## Scroll & Layout
 
-### Core Configuration
+| Property | Type | Default | Description |
+|:---|:---|:---|:---|
+| `autoScroll` | `boolean` | `false` | Enable auto-scroll during dragging near edges |
+| `style` | `CSSProperties` | `--` | Custom inline style for the timeline wrapper |
+| `onScroll` | `(params: OnScrollParams) => void` | `--` | Scroll callback — use to sync sidebars |
+| `scrollTop` | `number` | `--` | **@deprecated** — use `ref.setScrollTop` instead |
 
-| Property     | Type                             | Default  | Description                               |
-| :----------- | :------------------------------- | :------- | :---------------------------------------- |
-| `editorData` | `TimelineRow[]`                  | -        | **(Required)** The main dataset.          |
-| `effects`    | `Record<string, TimelineEffect>` | -        | **(Required)** Map of effect definitions. |
-| `onChange`   | `(data: TimelineRow[]) => void`  | -        | Triggered on any data change.             |
-| `engine`     | `ITimelineEngine`                | internal | Provide a custom engine instance.         |
+---
 
-### Display & Scale
+## Scale & Display
 
-| Property          | Type      | Default | Description                        |
-| :---------------- | :-------- | :------ | :--------------------------------- |
-| `scale`           | `number`  | `1`     | Scaling factor (seconds per mark). |
-| `scaleWidth`      | `number`  | `160`   | Width of one scale unit (px).      |
-| `scaleSplitCount` | `number`  | `10`    | Grid subdivisions per unit.        |
-| `rowHeight`       | `number`  | `32`    | Height of each row (px).           |
-| `startLeft`       | `number`  | `20`    | Left padding for scale (px).       |
-| `hideCursor`      | `boolean` | `false` | Completely hide the playhead.      |
+| Property | Type | Default | Description |
+|:---|:---|:---|:---|
+| `scale` | `number` | `1` | Duration (seconds) represented by one scale mark (`>0`) |
+| `scaleWidth` | `number` | `160` | Display width (px) of one scale mark (`>0`) |
+| `scaleSplitCount` | `number` | `10` | Number of subdivisions per scale mark (`>0` integer) |
+| `minScaleCount` | `number` | `20` | Minimum number of scale marks shown (`>=1`) |
+| `maxScaleCount` | `number` | `Infinity` | Maximum number of scale marks (`>=minScaleCount`) |
+| `startLeft` | `number` | `20` | Left padding before the scale starts (px, `>=0`) |
+| `rowHeight` | `number` | `32` | Height of each row (px, `>0`) |
 
-### Advanced Features (New)
+---
 
-| Property             | Type      | Default | Description                         |
-| :------------------- | :-------- | :------ | :---------------------------------- |
-| `enableRowDrag`      | `boolean` | `false` | Enable vertical track reordering.   |
-| `enableCrossRowDrag` | `boolean` | `false` | Allow dragging blocks between rows. |
-| `gridSnap`           | `boolean` | `false` | Snap blocks to grid lines.          |
-| `dragLine`           | `boolean` | `false` | Show vertical alignment lines.      |
-| `autoScroll`         | `boolean` | `false` | Scroll when dragging near edges.    |
+## Behavior & Interaction
 
-### Custom Renderers
+| Property | Type | Default | Description |
+|:---|:---|:---|:---|
+| `gridSnap` | `boolean` | `false` | Snap action blocks to grid subdivisions |
+| `dragLine` | `boolean` | `false` | Show auxiliary snap lines while dragging |
+| `hideCursor` | `boolean` | `false` | Hide the playback cursor line |
+| `disableDrag` | `boolean` | `false` | Lock all action blocks — no dragging or resizing |
+| `autoReRender` | `boolean` | `true` | Auto re-render when data or cursor time changes |
 
-| Property          | Type                             | Description                                        |
-| :---------------- | :------------------------------- | :------------------------------------------------- |
-| `getActionRender` | `(action, row) => ReactNode`     | Fully customize the action block UI.               |
-| `getGhostPreview` | `({ action, row }) => ReactNode` | **(New)** Customize the block preview during drag. |
-| `getScaleRender`  | `(scale) => ReactNode`           | Customize the top ruler marks.                     |
+---
 
-## Event Callbacks
+## Engine
 
-<Callout type="info">
-  Most callbacks provide the current state of the object being interacted with.
-</Callout>
+| Property | Type | Default | Description |
+|:---|:---|:---|:---|
+| `engine` | `TimelineEngine` | built-in | Provide a custom `TimelineEngine` instance |
 
-- `onActionMoveStart`: `({ action, row }) => void`
-- `onActionMoving`: `({ action, row, start, end }) => void | boolean` (Return `false` to block)
-- `onActionMoveEnd`: `({ action, row, start, end }) => void`
-- `onRowDragStart`: `({ row }) => void`
-- `onRowDragEnd`: `({ row, editorData }) => void`
-- `onClickAction`: `(e, { action, row, time }) => void`
-- `onClickRow`: `(e, { row, time }) => void`
+---
+
+## Data Change
+
+| Property | Type | Default | Description |
+|:---|:---|:---|:---|
+| `onChange` | `(editorData: TimelineRow[]) => boolean \| void` | `--` | Fired when an action operation ends. Return `false` to prevent automatic engine synchronization |
+
+---
+
+## Custom Renderers
+
+| Property | Type | Description |
+|:---|:---|:---|
+| `getActionRender` | `(action: TimelineAction, row: TimelineRow) => ReactNode` | Custom render function for action blocks |
+| `getScaleRender` | `(scale: number) => ReactNode` | Custom render function for scale ruler marks |
+
+---
+
+## New Fork Props
+
+These props are exclusive to `@keplar-404/react-timeline-editor`:
+
+| Property | Type | Default | Description |
+|:---|:---|:---|:---|
+| `enableRowDrag` | `boolean` | `false` | Enable dragging to reorder entire track rows |
+| `enableCrossRowDrag` | `boolean` | `false` | Enable dragging action blocks between different rows |
+| `getGhostPreview` | `({ action, row }) => ReactNode` | `--` | Custom ghost preview during cross-row drag |
+
+---
+
+## Action Move Callbacks
+
+| Property | Type | Description |
+|:---|:---|:---|
+| `onActionMoveStart` | `(params: { action, row }) => void` | Fired when a block starts moving |
+| `onActionMoving` | `(params: { action, row, start, end }) => boolean \| void` | Fired during movement — return `false` to cancel |
+| `onActionMoveEnd` | `(params: { action, row, start, end }) => void` | Fired when movement ends |
+
+---
+
+## Action Resize Callbacks
+
+| Property | Type | Description |
+|:---|:---|:---|
+| `onActionResizeStart` | `(params: { action, row, dir }) => void` | Fired when resize starts |
+| `onActionResizing` | `(params: { action, row, start, end, dir }) => boolean \| void` | Fired during resizing — return `false` to cancel |
+| `onActionResizeEnd` | `(params: { action, row, start, end, dir }) => void` | Fired when resize ends |
+
+---
+
+## Click & Context Callbacks
+
+| Property | Type | Description |
+|:---|:---|:---|
+| `onClickRow` | `(e, { row, time }) => void` | Row single-click |
+| `onClickAction` | `(e, { action, row, time }) => void` | Action block single-click |
+| `onClickActionOnly` | `(e, { action, row, time }) => void` | Action click — **not** fired when a drag was triggered |
+| `onDoubleClickRow` | `(e, { row, time }) => void` | Row double-click |
+| `onDoubleClickAction` | `(e, { action, row, time }) => void` | Action block double-click |
+| `onContextMenuRow` | `(e, { row, time }) => void` | Row right-click |
+| `onContextMenuAction` | `(e, { action, row, time }) => void` | Action right-click |
+
+---
+
+## Row Drag Callbacks
+
+| Property | Type | Description |
+|:---|:---|:---|
+| `onRowDragStart` | `({ row }) => void` | Fired when a row drag starts |
+| `onRowDragEnd` | `({ row, editorData }) => void` | Fired when a row drag drop completes — `editorData` is the reordered array |
+
+---
+
+## Cursor Callbacks
+
+| Property | Type | Description |
+|:---|:---|:---|
+| `onCursorDragStart` | `(time: number) => void` | Fired when cursor drag begins |
+| `onCursorDragEnd` | `(time: number) => void` | Fired when cursor drag ends |
+| `onCursorDrag` | `(time: number) => void` | Fired continuously while cursor is dragged |
+| `onClickTimeArea` | `(time, e) => boolean` | Time ruler click — return `false` to block cursor movement |
+
+---
+
+## Ref Handle (`TimelineState`)
+
+Attach a `ref` to `<Timeline />` to get imperative control:
+
+```tsx
+const timelineRef = useRef<TimelineState>(null);
+<Timeline ref={timelineRef} ... />
+```
+
+| Member | Type | Description |
+|:---|:---|:---|
+| `target` | `HTMLElement \| null` | The underlying DOM node |
+| `listener` | `Emitter<EventTypes>` | Engine event emitter — use `.on(...)` to subscribe |
+| `isPlaying` | `boolean` | Whether timeline is currently playing |
+| `isPaused` | `boolean` | Whether timeline is paused |
+| `setTime(time)` | `(time: number) => void` | Move cursor to specific time |
+| `getTime()` | `() => number` | Get current cursor time |
+| `setPlayRate(rate)` | `(rate: number) => void` | Set playback speed multiplier |
+| `getPlayRate()` | `() => number` | Get current playback rate |
+| `reRender()` | `() => void` | Re-render at current time without playing |
+| `play(param)` | `(param?: { toTime?, autoEnd?, runActionIds? }) => boolean` | Start playback |
+| `pause()` | `() => void` | Pause playback |
+| `setScrollLeft(val)` | `(val: number) => void` | Programmatic horizontal scroll |
+| `setScrollTop(val)` | `(val: number) => void` | Programmatic vertical scroll |

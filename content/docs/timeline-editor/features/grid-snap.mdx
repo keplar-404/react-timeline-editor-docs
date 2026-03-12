@@ -1,0 +1,72 @@
+---
+title: Grid Snap
+description: Snap action blocks to grid intervals for precise, quantized editing.
+---
+
+import { GridSnapPreview } from "@/components/timeline-preview";
+
+After enabling Grid Snap, action blocks will snap and move according to the subdivided units of the timeline ruler. This is essential for frame-accurate or beat-accurate editing.
+
+## Live Preview
+
+<GridSnapPreview />
+
+Try dragging one of the action blocks — it will snap to precise grid positions instead of moving freely.
+
+## Usage
+
+Enable grid snapping by passing `gridSnap={true}`:
+
+```tsx
+import { Timeline, TimelineRow, TimelineEffect } from '@keplar-404/react-timeline-editor';
+import React, { useState } from 'react';
+
+const mockData: TimelineRow[] = [
+  {
+    id: '0',
+    actions: [
+      {
+        id: 'action00',
+        start: 0,
+        end: 2,
+        effectId: 'effect0',
+      },
+    ],
+  },
+];
+
+const mockEffect: Record<string, TimelineEffect> = {
+  effect0: { id: 'effect0', name: 'Effect 0' },
+};
+
+export const EditorGridSnap = () => {
+  const [data, setData] = useState(mockData);
+
+  return (
+    <Timeline
+      editorData={data}
+      effects={mockEffect}
+      onChange={setData}
+      gridSnap={true}
+      scaleSplitCount={10}  // Will snap in 1/10th of a scale unit increments
+    />
+  );
+};
+```
+
+## How It Works
+
+The snap increment is calculated as:
+
+```
+snapInterval = scale / scaleSplitCount
+```
+
+With the defaults (`scale=1`, `scaleSplitCount=10`), blocks snap every `0.1` seconds. Increase `scaleSplitCount` for finer snapping or decrease it for coarser snapping.
+
+| `scaleSplitCount` | Snap interval (with `scale=1`) |
+|:---|:---|
+| `4` | Every 0.25s |
+| `10` | Every 0.1s |
+| `20` | Every 0.05s |
+| `100` | Every 0.01s |

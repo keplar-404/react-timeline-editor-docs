@@ -6,6 +6,9 @@
     "index",
     "getting-started",
     "core-concepts",
-    "advanced"
+    "features",
+    "advanced",
+    "api-reference",
+    "props"
   ]
 }

@@ -1,67 +1,173 @@
 ---
-title: Data Interface
-description: Understanding the core data structures that power the timeline.
+title: Data Interfaces
+description: A deep-dive into TimelineRow, TimelineAction, and TimelineEffect — the three core types that power the timeline editor.
 ---
 
 import { Callout } from "fumadocs-ui/components/callout";
 
-To use `@keplar-404/react-timeline-editor` effectively, you need to understand its primary data structures.
+The React Timeline Editor is built around three core data types exported from `@keplar-404/react-timeline-editor`.
 
 ## TimelineRow
 
-A `TimelineRow` represents a single track or layer in your timeline. It holds an array of `TimelineAction` objects.
+A **Row** (or Track) is the vertical lane in your timeline. Each row contains an ordered list of action blocks.
 
-| Property     | Description                           | Type               | Default      |
-| :----------- | :------------------------------------ | :----------------- | :----------- |
-| `id`         | Unique identifier for the row         | `string`           | **Required** |
-| `actions`    | List of actions belonging to this row | `TimelineAction[]` | **Required** |
-| `rowHeight`  | Custom row height                     | `number`           | Optional     |
-| `selected`   | Is the row currently selected?        | `boolean`          | `false`      |
-| `classNames` | Additional CSS classes for styling    | `string[]`         | Optional     |
-
----
+```typescript
+export interface TimelineRow {
+  /** Row unique ID */
+  id: string;
+  /** List of actions contained in this row */
+  actions: TimelineAction[];
+  /** Custom CSS class for styling the row */
+  classNames?: string[];
+  /** Whether the row is in a "selected" state */
+  selected?: boolean;
+  /** Flexible row height (overrides rowHeight prop) */
+  flexy?: boolean;
+}
+```
 
 ## TimelineAction
 
-A `TimelineAction` is a specific block of time on a track. It has a start time, an end time, and points to an effect.
+An **Action** is a time-bounded block sitting inside a `TimelineRow`. It is the fundamental unit of the timeline.
 
-| Property   | Description                         | Type      | Default      |
-| :--------- | :---------------------------------- | :-------- | :----------- |
-| `id`       | Action ID                           | `string`  | **Required** |
-| `start`    | Start time (in seconds)             | `number`  | **Required** |
-| `end`      | End time (in seconds)               | `number`  | **Required** |
-| `effectId` | Corresponds to an effect definition | `string`  | **Required** |
-| `flexible` | Can this action be resized?         | `boolean` | `true`       |
-| `movable`  | Can this action be moved (dragged)? | `boolean` | `true`       |
-| `disable`  | Prevent this action from running    | `boolean` | `false`      |
+```typescript
+export interface TimelineAction {
+  /** Action unique ID */
+  id: string;
+  /** Start time of the action in seconds */
+  start: number;
+  /** End time of the action in seconds */
+  end: number;
+  /** ID of the effect that defines this action's behavior */
+  effectId: string;
+  /** If false, the action cannot be dragged horizontally. Defaults to true. */
+  movable?: boolean;
+  /** If false, the action cannot be resized. Defaults to true. */
+  flexible?: boolean;
+  /** Optional minimum start position (clamps dragging). */
+  minStart?: number;
+  /** Optional maximum end position (clamps dragging). */
+  maxEnd?: number;
+  /** Inline CSS styles for the action block */
+  style?: React.CSSProperties;
+  /** Additional CSS class name for the action block */
+  className?: string;
+  /** Custom data payload — attach any extra metadata here */
+  data?: any;
+}
+```
 
----
+<Callout type="tip">
+  You can extend `TimelineAction` with your own TypeScript interface to add typed custom data:
+
+  ```typescript
+  export interface MyAudioAction extends TimelineAction {
+    data: {
+      src: string;
+      volume: number;
+    };
+  }
+  ```
+</Callout>
 
 ## TimelineEffect
 
-A `TimelineEffect` defines what actually _happens_ when the engine's playback head intersects with a `TimelineAction`.
+An **Effect** is the mapping between an action's `effectId` and the logic that runs during playback. Effects live in a flat `Record<string, TimelineEffect>` and are passed to the `<Timeline />` via the `effects` prop.
 
-| Property | Description            | Type                   | Default      |
-| :------- | :--------------------- | :--------------------- | :----------- |
-| `id`     | Unique Effect ID       | `string`               | **Required** |
-| `name`   | Human-readable name    | `string`               | Optional     |
-| `source` | Runtime code/callbacks | `TimeLineEffectSource` | Optional     |
+```typescript
+export interface TimelineEffect {
+  /** Effect ID (must match the effectId in your TimelineAction) */
+  id: string;
+  /** Human-readable name */
+  name: string;
+  /** Engine source callbacks — define what happens during playback */
+  source?: TimeLineEffectSource;
+}
+```
 
-<Callout type="info">
-  The `effects` dictionary passed to the `<Timeline />` component maps
-  `effectId` strings to these `TimelineEffect` objects. Multiple actions can
-  share the same effect (for example, multiple "Fade In" actions sharing the
-  same execution logic).
-</Callout>
+### `TimeLineEffectSource` Callbacks
 
-### TimeLineEffectSource
+The `source` property contains lifecycle callbacks that the engine fires during playback:
 
-The `source` object inside a `TimelineEffect` provides hooks to execute custom logic during playback:
+```typescript
+export interface TimeLineEffectSource {
+  /** Called when playback starts while cursor is already inside this action */
+  start?: (params: EffectSourceParams) => void;
+  /** Called when the playhead enters this action's time range */
+  enter?: (params: EffectSourceParams) => void;
+  /** Called every animation frame while inside this action's range */
+  update?: (params: EffectSourceParams) => void;
+  /** Called when the playhead leaves this action's time range */
+  leave?: (params: EffectSourceParams) => void;
+  /** Called when playback is paused while inside this action */
+  stop?: (params: EffectSourceParams) => void;
+}
+```
 
-- **`enter`**: Fired when the playhead enters the action's time bounds.
-- **`leave`**: Fired when the playhead exits the action's bounds.
-- **`update`**: Fired continuously every frame while the playhead is inside the bounds.
-- **`start`**: Fired if playback starts from _within_ the action's bounds.
-- **`stop`**: Fired if playback is paused while _within_ the bounds.
+### Engine Callback Lifecycle
 
-These hooks allow you to sync the timeline state with external video players, 3D canvases, or animation systems!
+| Callback | Fires when... | Typical use |
+|---|---|---|
+| `start` | Playback begins while cursor is **already within** the action range | Resume audio at correct offset |
+| `enter` | Playhead **crosses into** the action from outside | Start sound / show animation |
+| `update` | Every tick **while inside** the action | Advance animation frame |
+| `leave` | Playhead **crosses out** of the action | Stop audio / hide animation |
+| `stop` | Playback is **paused** inside the action | Pause audio |
+
+## A Full Example Setup
+
+```typescript
+import { TimelineRow, TimelineEffect } from '@keplar-404/react-timeline-editor';
+import { TimelineEngine } from '@keplar-404/timeline-engine';
+
+// ── Effect definitions ──────────────────────────────────────────────────────
+const mockEffect: Record<string, TimelineEffect> = {
+  audio: {
+    id: 'audio',
+    name: 'Play Audio',
+    source: {
+      enter: ({ action, time }) => {
+        console.log(`Playing audio for action ${action.id} at t=${time}`);
+      },
+      leave: ({ action }) => {
+        console.log(`Stopping audio for action ${action.id}`);
+      },
+    },
+  },
+  video: {
+    id: 'video',
+    name: 'Play Video',
+  },
+};
+
+// ── Timeline data ──────────────────────────────────────────────────────────
+const editorData: TimelineRow[] = [
+  {
+    id: 'audio-track',
+    actions: [
+      {
+        id: 'audio-clip-1',
+        start: 0,
+        end: 10,
+        effectId: 'audio',
+        data: { src: '/audio/bg.mp3', name: 'Background Music' },
+      },
+    ],
+  },
+  {
+    id: 'video-track',
+    actions: [
+      {
+        id: 'video-clip-1',
+        start: 2,
+        end: 8,
+        effectId: 'video',
+        movable: true,
+        flexible: true,
+        minStart: 0,
+        maxEnd: 20,
+      },
+    ],
+  },
+];
+```

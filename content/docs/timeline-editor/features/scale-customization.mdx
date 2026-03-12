@@ -1,0 +1,101 @@
+---
+title: Scale Customization
+description: Control the timeline ruler — zoom level, tick width, and subdivision count.
+---
+
+import { Callout } from "fumadocs-ui/components/callout";
+import { ScaleCustomizationPreview } from "@/components/timeline-preview";
+
+The timeline's scale ruler is fully configurable. You can build dynamic zoom controls by adjusting `scale` and `scaleWidth` in real time.
+
+## Live Preview
+
+<ScaleCustomizationPreview />
+
+## Key Scale Props
+
+| Prop | Type | Default | Description |
+|:---|:---|:---|:---|
+| `scale` | `number` | `1` | How many **seconds** each tick mark represents |
+| `scaleWidth` | `number` | `160` | How many **pixels** wide each tick mark is |
+| `scaleSplitCount` | `number` | `10` | How many **subdivisions** each tick is split into |
+
+## Zoom Control Example
+
+By letting the user control `scale` and `scaleWidth`, you get a fully interactive zoom UI:
+
+```tsx
+import { Timeline, TimelineRow, TimelineEffect } from '@keplar-404/react-timeline-editor';
+import React, { useState } from 'react';
+
+const mockData: TimelineRow[] = [{ id: '0', actions: [] }];
+const mockEffect: Record<string, TimelineEffect> = {};
+
+export const EditorScale = () => {
+  const [scale, setScale] = useState(5);
+  const [scaleWidth, setScaleWidth] = useState(160);
+  const [scaleSplitCount, setScaleSplitCount] = useState(10);
+
+  return (
+    <div className="timeline-container">
+      <div className="controls">
+        <label>
+          Scale (Zoom): {scale}s
+          <input
+            type="range"
+            min="1" max="10" step="1"
+            value={scale}
+            onChange={(e) => setScale(Number(e.target.value))}
+          />
+        </label>
+        <label>
+          Scale Width (px): {scaleWidth}
+          <input
+            type="range"
+            min="50" max="300" step="10"
+            value={scaleWidth}
+            onChange={(e) => setScaleWidth(Number(e.target.value))}
+          />
+        </label>
+      </div>
+
+      <Timeline
+        scale={scale}
+        scaleWidth={scaleWidth}
+        scaleSplitCount={scaleSplitCount}
+        editorData={mockData}
+        effects={mockEffect}
+      />
+
+      <style>{`
+        .timeline-container { border: 1px solid #333; }
+        .controls { display: flex; gap: 20px; padding: 10px; background: #fafafa; border-bottom: 1px solid #333; }
+        .controls label { display: flex; flex-direction: column; font-size: 14px; }
+      `}</style>
+    </div>
+  );
+};
+```
+
+## Custom Scale Render
+
+Use `getScaleRender` to fully replace the ruler tick labels with any React node:
+
+```tsx
+<Timeline
+  scale={5}
+  scaleWidth={160}
+  editorData={data}
+  effects={mockEffect}
+  getScaleRender={(scale) => (
+    <div style={{ fontSize: '10px', color: '#888' }}>
+      {`${scale}s`}
+    </div>
+  )}
+/>
+```
+
+<Callout type="tip">
+  A common pattern is to format the scale time as `MM:SS` instead of raw seconds.
+  This makes the ruler much more readable for longer timelines.
+</Callout>

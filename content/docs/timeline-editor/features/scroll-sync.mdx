@@ -1,0 +1,127 @@
+---
+title: Scroll Sync
+description: Synchronize external sidebars or track headers with the timeline's vertical scroll position.
+---
+
+import { ScrollSyncPreview } from "@/components/timeline-preview";
+import { Callout } from "fumadocs-ui/components/callout";
+
+The `<Timeline>` component provides an `onScroll` callback that fires whenever the editor scrolls. You can use this to keep external elements (like track label sidebars) in exact sync with the timeline.
+
+## Live Preview
+
+<ScrollSyncPreview />
+
+The panel on the left stays in sync with the timeline's vertical scroll — the track labels line up perfectly with their rows.
+
+## Implementation
+
+```tsx
+import { Timeline, TimelineRow, TimelineEffect } from '@keplar-404/react-timeline-editor';
+import React, { useState, useRef } from 'react';
+
+const mockData: TimelineRow[] = Array.from({ length: 20 }).map((_, i) => ({
+  id: `track-${i + 1}`,
+  actions: [],
+}));
+
+export const EditorScrollSync = () => {
+  const [data, setData] = useState(mockData);
+  const trackHeaderRef = useRef<HTMLDivElement>(null);
+
+  // Mirror the timeline's vertical scroll to the sidebar
+  const handleScroll = ({ scrollTop }: { scrollTop: number }) => {
+    if (trackHeaderRef.current) {
+      trackHeaderRef.current.scrollTop = scrollTop;
+    }
+  };
+
+  return (
+    <div className="editor-layout">
+      {/* Side Panel for Track Labels */}
+      <div className="track-headers" ref={trackHeaderRef}>
+        <div className="track-headers-spacer">
+          {data.map((row) => (
+            <div key={row.id} className="track-header-item">
+              {row.id}
+            </div>
+          ))}
+        </div>
+      </div>
+
+      {/* Main Timeline */}
+      <div className="timeline-main">
+        <Timeline
+          editorData={data}
+          effects={{}}
+          onChange={setData}
+          onScroll={handleScroll}
+        />
+      </div>
+
+      <style>{`
+        .editor-layout {
+          display: flex;
+          height: 400px;
+          border: 1px solid #333;
+        }
+
+        .track-headers {
+          width: 150px;
+          background: #f0f0f0;
+          overflow-y: hidden; /* Hide scrollbar — handled by sync */
+          position: relative;
+        }
+
+        /* Must have a top margin matching the Timeline's ruler height */
+        .track-headers-spacer {
+          margin-top: 32px;
+        }
+
+        .track-header-item {
+          height: 32px;     /* Must match Timeline's rowHeight prop */
+          line-height: 32px;
+          border-bottom: 1px solid #ccc;
+          padding-left: 10px;
+          font-size: 12px;
+        }
+
+        .timeline-main {
+          flex: 1;
+          overflow: hidden;
+        }
+      `}</style>
+    </div>
+  );
+};
+```
+
+<Callout type="info">
+  **Critical alignment tip:** The `.track-headers-spacer` must have a `margin-top` equal to the
+  height of the Timeline's time ruler header (default: `32px`). Similarly, each `.track-header-item`
+  height must equal the `rowHeight` prop (default: `32px`). If these don't match, the scroll sync
+  will be off.
+</Callout>
+
+## `OnScrollParams` Type
+
+```typescript
+interface OnScrollParams {
+  scrollTop: number;    // Vertical scroll offset from top
+  scrollLeft: number;   // Horizontal scroll offset from left
+  scrollHeight: number; // Total scrollable height
+  clientHeight: number; // Visible height
+}
+```
+
+## Programmatic Scroll
+
+You can also scroll the timeline programmatically via its `ref`:
+
+```tsx
+const timelineRef = useRef<TimelineState>(null);
+
+// Jump to a specific position
+timelineRef.current?.setScrollTop(200);
+timelineRef.current?.setScrollLeft(500);
+```

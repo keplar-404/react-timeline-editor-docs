@@ -1,63 +1,132 @@
 ---
 title: Basic Usage
-description: Build your first functional timeline editor.
+description: Build your first functional timeline editor with multiple tracks and action blocks.
 ---
 
 import { Callout } from "fumadocs-ui/components/callout";
+import { BasicTimelinePreview } from "@/components/timeline-preview";
 
-Now that you have installed the package, let's create a functional timeline editor.
+The `<Timeline />` component is a **controlled component** — you manage the data state and the timeline renders it.
 
-## A Simple Editor
+## Live Preview
 
-The `<Timeline />` component takes your data and effects, and immediately provides a drag-and-drop sequencing interface.
+<BasicTimelinePreview />
+
+## Standard Timeline Editor
 
 ```tsx
-import React, { useState } from "react";
-import {
-  Timeline,
-  TimelineAction,
-  TimelineRow,
-} from "@keplar-404/react-timeline-editor";
+import React, { useState } from 'react';
+import { Timeline, TimelineRow, TimelineEffect } from '@keplar-404/react-timeline-editor';
+import '@keplar-404/react-timeline-editor/dist/react-timeline-editor.css';
 
-// 1. Define your initial data structure
-const initialData: TimelineRow[] = [
+const mockData: TimelineRow[] = [
   {
-    id: "track-1",
+    id: '0',
     actions: [
-      {
-        id: "action-1",
-        start: 0,
-        end: 2,
-        effectId: "effect-1",
-      },
+      { id: 'action00', start: 0, end: 2, effectId: 'effect0' },
+      { id: 'action01', start: 3, end: 6, effectId: 'effect1' },
+    ],
+  },
+  {
+    id: '1',
+    actions: [
+      { id: 'action10', start: 1, end: 4, effectId: 'effect0' },
     ],
   },
 ];
 
-export const MyEditor = () => {
-  // 2. Manage the timeline state
-  const [data, setData] = useState(initialData);
+const mockEffect: Record<string, TimelineEffect> = {
+  effect0: { id: 'effect0', name: 'Effect 0' },
+  effect1: { id: 'effect1', name: 'Effect 1' },
+};
+
+export const EditorBasic = () => {
+  const [data, setData] = useState(mockData);
 
   return (
-    <div style={{ height: "400px", width: "100%" }}>
-      {/* 3. Render the Timeline */}
+    <div className="timeline-container">
       <Timeline
         editorData={data}
-        onChange={setData}
-        effects={{}}
+        effects={mockEffect}
+        onChange={(newData) => setData(newData)}
         autoScroll={true}
       />
+      <style>{`
+        .timeline-container {
+          width: 100%;
+          border: 1px solid #333;
+          border-radius: 4px;
+        }
+      `}</style>
     </div>
   );
 };
 ```
 
-### Try it out!
-
-Render this component in your application. You will see a timeline track with a single action spanning from 0 to 2 seconds. Because we enabled `autoScroll`, if you drag the action block to the right, the timeline will automatically pan to follow it!
-
 <Callout type="info">
-  Notice how we bind `editorData` to our state, and update that state via the
-  `onChange` callback. The timeline is a controlled component—it relies on you
-  to handle the data mutations when a user drags or resizes a block.
+  **Controlled Component Pattern:** The `onChange` callback fires after any drag or resize.
+  Always update your state using the `newData` parameter to keep the timeline in sync.
 </Callout>
+
+## Disable Editing
+
+You can lock the entire timeline to prevent any user interaction:
+
+```tsx
+<Timeline
+  disableDrag={true}
+  editorData={data}
+  effects={mockEffect}
+/>
+```
+
+## Hide Cursor
+
+Hide the playback cursor line when you don't need it:
+
+```tsx
+<Timeline
+  hideCursor={true}
+  editorData={data}
+  effects={mockEffect}
+/>
+```
+
+## Imperative Control via Ref
+
+For programmatic control (play, pause, seek), attach a `ref`:
+
+```tsx
+import React, { useRef } from 'react';
+import { Timeline, TimelineState } from '@keplar-404/react-timeline-editor';
+
+export const ControlledTimeline = () => {
+  const timelineRef = useRef<TimelineState>(null);
+
+  const handlePlay = () => {
+    timelineRef.current?.play({ autoEnd: true });
+  };
+
+  const handlePause = () => {
+    timelineRef.current?.pause();
+  };
+
+  const handleSeek = (seconds: number) => {
+    timelineRef.current?.setTime(seconds);
+  };
+
+  return (
+    <>
+      <button onClick={handlePlay}>▶ Play</button>
+      <button onClick={handlePause}>⏸ Pause</button>
+      <button onClick={() => handleSeek(5)}>Seek to 5s</button>
+      <Timeline
+        ref={timelineRef}
+        editorData={data}
+        effects={mockEffect}
+        onChange={setData}
+      />
+    </>
+  );
+};
+```

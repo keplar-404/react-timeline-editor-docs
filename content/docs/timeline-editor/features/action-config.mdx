@@ -1,0 +1,95 @@
+---
+title: Action Configuration
+description: Control how individual action blocks behave — locking movement, resizing, and clamping their range.
+---
+
+import { Callout } from "fumadocs-ui/components/callout";
+import { ActionConfigPreview } from "@/components/timeline-preview";
+
+You can control each action's interactive behavior via its own properties — without touching any Timeline props.
+
+## Live Preview
+
+<ActionConfigPreview />
+
+In the preview above:
+- **Block 1** (0–2s): `movable: false` — cannot be dragged horizontally
+- **Block 2** (3–5s): `flexible: false` — cannot be resized
+- **Block 3** (6–8s): both `movable: false` and `flexible: false` — completely locked
+
+## Movable & Flexible
+
+Control whether an action can be dragged or resized:
+
+```tsx
+import { Timeline, TimelineRow, TimelineEffect } from '@keplar-404/react-timeline-editor';
+import React, { useState } from 'react';
+
+const mockData: TimelineRow[] = [
+  {
+    id: '0',
+    actions: [
+      {
+        id: 'action00',
+        start: 0,
+        end: 2,
+        effectId: 'effect0',
+        movable: false,   // Cannot be dragged to a new time position
+      },
+      {
+        id: 'action01',
+        start: 3,
+        end: 5,
+        effectId: 'effect0',
+        flexible: false,  // Cannot be resized via start/end handles
+      },
+      {
+        id: 'action02',
+        start: 6,
+        end: 8,
+        effectId: 'effect0',
+        flexible: false,
+        movable: false,   // Completely locked — no interaction
+      },
+    ],
+  },
+];
+```
+
+<Callout type="info">
+  Both `movable` and `flexible` default to `true`. You only need to pass `false`
+  to restrict behavior.
+</Callout>
+
+## MinStart & MaxEnd Clamping
+
+Restrict how far an action can be moved using `minStart` and `maxEnd`:
+
+```tsx
+const mockDataWithLimits: TimelineRow[] = [
+  {
+    id: '1',
+    actions: [
+      {
+        id: 'action10',
+        start: 2,
+        end: 4,
+        effectId: 'effect0',
+        minStart: 1,  // Cannot be moved left of 1 second
+        maxEnd: 6,    // Cannot be moved right of 6 seconds
+      },
+    ],
+  },
+];
+```
+
+If the user tries to drag or resize the block beyond these bounds, the editor will clamp it at the limit.
+
+## Summary
+
+| Property | Type | Default | Description |
+|:---|:---|:---|:---|
+| `movable` | `boolean` | `true` | Allow horizontal dragging |
+| `flexible` | `boolean` | `true` | Allow resizing via handles |
+| `minStart` | `number` | `--` | Minimum allowed start time |
+| `maxEnd` | `number` | `--` | Maximum allowed end time |

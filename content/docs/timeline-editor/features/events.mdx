@@ -1,0 +1,129 @@
+---
+title: Events & Callbacks
+description: Hook into click, double-click, right-click, and drag events on actions, rows, and the time ruler.
+---
+
+import { Callout } from "fumadocs-ui/components/callout";
+
+The `<Timeline />` exposes a rich set of event callbacks for actions, rows, and the time ruler.
+
+## Click Events
+
+```tsx
+<Timeline
+  editorData={data}
+  effects={mockEffect}
+  // Single-click on an action block
+  onClickAction={(e, { action, row, time }) => {
+    console.log(`Clicked action: ${action.id} at time ${time.toFixed(2)}s`);
+  }}
+  // Single-click on a row's empty area
+  onClickRow={(e, { row, time }) => {
+    console.log(`Clicked row: ${row.id} at time ${time.toFixed(2)}s`);
+  }}
+  // Click on the time ruler
+  onClickTimeArea={(time, e) => {
+    console.log(`Clicked time area at: ${time.toFixed(2)}s`);
+    return true; // return false to prevent cursor from jumping
+  }}
+/>
+```
+
+## Double-Click to Add Actions
+
+A common pattern is to listen for `onDoubleClickRow` to insert new action blocks:
+
+```tsx
+import { Timeline, TimelineRow, TimelineEffect } from '@keplar-404/react-timeline-editor';
+import React, { useState } from 'react';
+
+const mockData: TimelineRow[] = [
+  { id: 'row-1', actions: [] },
+  { id: 'row-2', actions: [] },
+];
+
+const mockEffect: Record<string, TimelineEffect> = {
+  effect0: { id: 'effect0', name: 'Added Effect' },
+};
+
+export const EditorEventHandling = () => {
+  const [data, setData] = useState(mockData);
+  let actionCounter = 0;
+
+  const handleDoubleClickRow = (
+    e: React.MouseEvent,
+    { row, time }: { row: TimelineRow; time: number }
+  ) => {
+    // Prevent adding if we clicked directly on an existing action
+    const target = e.target as HTMLElement;
+    if (target.className.includes('timeline-editor-action')) return;
+
+    setData((prev) => {
+      const nextData = structuredClone(prev);
+      const targetRow = nextData.find((r) => r.id === row.id);
+
+      if (targetRow) {
+        actionCounter += 1;
+        targetRow.actions.push({
+          id: `new-action-${actionCounter}`,
+          start: time,
+          end: time + 2,  // default 2 second block
+          effectId: 'effect0',
+        });
+      }
+      return nextData;
+    });
+  };
+
+  return (
+    <div className="timeline-container">
+      <Timeline
+        editorData={data}
+        effects={mockEffect}
+        onChange={setData}
+        onDoubleClickRow={handleDoubleClickRow}
+        onClickAction={(e, { action, row, time }) => {
+          console.log(`Clicked action: ${action.id} at time ${time}`);
+        }}
+      />
+    </div>
+  );
+};
+```
+
+## Context Menu (Right-Click)
+
+```tsx
+<Timeline
+  editorData={data}
+  effects={mockEffect}
+  onContextMenuAction={(e, { action, row, time }) => {
+    e.preventDefault();
+    // Show your custom context menu
+    showContextMenu({ x: e.clientX, y: e.clientY, action });
+  }}
+  onContextMenuRow={(e, { row, time }) => {
+    e.preventDefault();
+    showRowContextMenu({ x: e.clientX, y: e.clientY, row });
+  }}
+/>
+```
+
+## All Event Callbacks
+
+| Callback | Signature | Description |
+|:---|:---|:---|
+| `onClickRow` | `(e, { row, time }) => void` | Row single-click |
+| `onClickAction` | `(e, { action, row, time }) => void` | Action single-click |
+| `onClickActionOnly` | `(e, { action, row, time }) => void` | Action click — **not** fired when drag triggered |
+| `onDoubleClickRow` | `(e, { row, time }) => void` | Row double-click |
+| `onDoubleClickAction` | `(e, { action, row, time }) => void` | Action double-click |
+| `onContextMenuRow` | `(e, { row, time }) => void` | Row right-click |
+| `onContextMenuAction` | `(e, { action, row, time }) => void` | Action right-click |
+| `onClickTimeArea` | `(time, e) => boolean` | Time ruler click — return `false` to block cursor |
+
+<Callout type="info">
+  The `time` parameter passed to all callbacks is the **timeline time in seconds** at the
+  click position — not pixel coordinates. This is calculated from the cursor position and
+  the current scale/offset settings.
+</Callout>

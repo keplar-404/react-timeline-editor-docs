@@ -1,0 +1,157 @@
+---
+title: Custom Styles
+description: Override default action block appearance with custom React renderers and CSS.
+---
+
+import { Callout } from "fumadocs-ui/components/callout";
+import { CustomStylePreview } from "@/components/timeline-preview";
+
+You can customize the appearance of action blocks using the `getActionRender` prop — returning any React node, styled however you want.
+
+## Live Preview
+
+<CustomStylePreview />
+
+The preview shows two custom action types: an orange "Audio" block and a purple "Video" block, each rendered with custom JSX.
+
+## Custom Render via `getActionRender`
+
+```tsx
+import React, { useState } from 'react';
+import { Timeline, TimelineRow, TimelineEffect } from '@keplar-404/react-timeline-editor';
+
+const mockEffect: Record<string, TimelineEffect> = {
+  effect0: { id: 'effect0', name: 'Audio Effect' },
+  effect1: { id: 'effect1', name: 'Video Effect' },
+};
+
+const mockData: TimelineRow[] = [
+  {
+    id: 'track-1',
+    actions: [
+      { id: 'action-0', start: 0, end: 2, effectId: 'effect0' },
+      { id: 'action-1', start: 3, end: 5, effectId: 'effect1' },
+    ],
+  },
+];
+
+export const EditorCustomStyle = () => {
+  const [data, setData] = useState(mockData);
+
+  return (
+    <div className="custom-editor-wrapper">
+      <Timeline
+        editorData={data}
+        effects={mockEffect}
+        onChange={setData}
+        getActionRender={(action, row) => {
+          if (action.effectId === 'effect0') {
+            return (
+              <div className="custom-effect-audio">
+                <span className="effect-text">🎵 {action.id}</span>
+              </div>
+            );
+          } else if (action.effectId === 'effect1') {
+            return (
+              <div className="custom-effect-video">
+                <span className="effect-text">🎬 {action.id}</span>
+              </div>
+            );
+          }
+        }}
+      />
+    </div>
+  );
+};
+```
+
+## The CSS
+
+All block styling is done via standard CSS. Here are the classes used in the example above:
+
+```css
+/* custom-timeline.css */
+
+.custom-editor-wrapper .timeline-editor {
+  width: 100%;
+  height: 300px;
+}
+
+/* Override the default action block height */
+.custom-editor-wrapper .timeline-editor-action {
+  height: 28px !important;
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+/* Audio block */
+.custom-effect-audio {
+  width: 100%;
+  height: 100%;
+  background-color: #cd9541;
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  color: white;
+  font-size: 11px;
+}
+
+.custom-effect-audio .effect-text {
+  margin-left: 6px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* Video block */
+.custom-effect-video {
+  width: 100%;
+  height: 100%;
+  background-color: #7846a7;
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  color: white;
+  font-size: 11px;
+}
+
+.custom-effect-video .effect-text {
+  margin-left: 6px;
+}
+
+/* Override left/right resize handles */
+.custom-editor-wrapper .timeline-editor-action-left-stretch::after,
+.custom-editor-wrapper .timeline-editor-action-right-stretch::after {
+  content: '';
+  position: absolute;
+  width: 18px;
+  height: 18px;
+  transform: rotate(45deg) scale(0.8);
+  background: #aabbcc;
+  border: none;
+}
+
+.custom-editor-wrapper .timeline-editor-action-left-stretch::after {
+  left: -9px;
+}
+
+.custom-editor-wrapper .timeline-editor-action-right-stretch::after {
+  right: -9px;
+}
+```
+
+<Callout type="tip">
+  The built-in action wrapper automatically applies the class
+  `timeline-editor-action-effect-{effectId}` to each block. You can use this
+  to target blocks by effect in your CSS without needing `getActionRender` at all.
+</Callout>
+
+## CSS Class Reference
+
+| Class | Applied to |
+|:---|:---|
+| `.timeline-editor` | The root timeline element |
+| `.timeline-editor-action` | Each action block wrapper |
+| `.timeline-editor-action-effect-{effectId}` | Action wrapper with effect-specific class |
+| `.timeline-editor-action-left-stretch` | Left resize handle |
+| `.timeline-editor-action-right-stretch` | Right resize handle |

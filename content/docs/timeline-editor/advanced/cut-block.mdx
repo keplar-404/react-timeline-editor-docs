@@ -1,45 +1,82 @@
 ---
 title: Cut Block (Blade Tool)
-description: Slice and split timeline actions dynamically.
+description: Slice and split timeline action blocks at precise time positions using the CutOverlay component.
 ---
 
 import { Callout } from "fumadocs-ui/components/callout";
 
-The `CutOverlay` provides a visual, interactive blade tool to split action blocks at a specific time cursor. This is a common feature in professional video and audio editors.
+The `CutOverlay` provides a visual "blade" that lets users split action blocks at any time position. It operates as a standalone overlay component mounted next to the timeline.
+
+## How it Works
+
+1. `CutOverlay` sits on top of `<Timeline>` inside a `position: relative` wrapper
+2. When the user hovers over an action block, a precision blade line appears
+3. When they click, `onCut` fires with the exact row ID, action ID, and cut time
+4. Use the included `splitActionInRow` utility to perform the immutable data update
 
 ## Basic Usage
 
-To implement a cutting feature, you mount the `<CutOverlay>` as a sibling to the `<Timeline>` inside a `position: relative` wrapper. When the user hovers over an action block, a precision blade appears.
-
 ```tsx
-import React, { useState } from "react";
+import React, { useState } from 'react';
 import {
   Timeline,
+  TimelineRow,
   CutOverlay,
   splitActionInRow,
-} from "@keplar-404/react-timeline-editor";
+} from '@keplar-404/react-timeline-editor';
+
+const mockData: TimelineRow[] = [
+  {
+    id: '0',
+    actions: [{ id: 'action00', start: 0, end: 10, effectId: 'effect0' }],
+  },
+];
 
 export const EditorCutBlock = () => {
-  const [data, setData] = useState(initialData);
+  const [data, setData] = useState(mockData);
   const [isCutMode, setIsCutMode] = useState(false);
 
-  const handleCut = (rowId, actionId, cutTime) => {
-    // We use the built-in splitActionInRow utility for immutable data updates
+  // Geometry must match between Timeline and CutOverlay
+  const scale = 5;
+  const scaleSplitCount = 10;
+  const scaleWidth = 160;
+  const startLeft = 20;
+  const rowHeight = 32;
+  const editAreaTopOffset = 32; // Height of the time ruler
+
+  const handleCut = (rowId: string, actionId: string, cutTime: number) => {
+    // splitActionInRow returns a new immutable data array
     const newData = splitActionInRow(data, rowId, actionId, cutTime);
     setData(newData);
   };
 
   return (
-    <div style={{ position: "relative" }}>
+    <div style={{ position: 'relative' }}>
       <button onClick={() => setIsCutMode(!isCutMode)}>
-        {isCutMode ? "Disable Blade" : "Enable Blade (Hold C)"}
+        {isCutMode ? 'Disable Cut Blade' : 'Enable Cut Blade (Hold C)'}
       </button>
 
-      <Timeline editorData={data} onChange={setData} disableDrag={isCutMode} />
+      <Timeline
+        editorData={data}
+        effects={{}}
+        onChange={setData}
+        scale={scale}
+        scaleWidth={scaleWidth}
+        startLeft={startLeft}
+        rowHeight={rowHeight}
+        disableDrag={isCutMode}  // Disable regular dragging while in cut mode
+      />
 
       <CutOverlay
         data={data}
-        config={{ keyboardModifier: "c" }}
+        scale={scale}
+        scaleSplitCount={scaleSplitCount}
+        scaleWidth={scaleWidth}
+        startLeft={startLeft}
+        rowHeight={rowHeight}
+        editAreaTopOffset={editAreaTopOffset}
+        gridSnap={false}
+        config={{ keyboardModifier: 'c' }}  // Activate with 'C' key
         onModifierChange={setIsCutMode}
         onCut={handleCut}
       />
@@ -48,25 +85,47 @@ export const EditorCutBlock = () => {
 };
 ```
 
-## How It Works
-
-1.  **Mounting**: The `CutOverlay` layer sits invisibly over the timeline area.
-2.  **Activation**: You can toggle cut mode manually, or use the `keyboardModifier` (like `c` or `Shift`) to activate it on-the-fly.
-3.  **Interaction**: When active, clicking on an action block will trigger `onCut`.
-4.  **Utilities**: Use the `splitActionInRow` helper function to handle the logic of splitting one block into two while maintaining unique IDs and correct timing.
-
-## Configuration
-
-The `CutOverlay` accepts a `config` object for fine-grained visual control:
-
-| Option               | Type      | Description                                       |
-| :------------------- | :-------- | :------------------------------------------------ |
-| `bladeColor`         | `string`  | Color of the vertical blade line.                 |
-| `showPill`           | `boolean` | Show a label at the cursor indicating split time. |
-| `showBlockHighlight` | `boolean` | Highlight the block currently under the blade.    |
-| `keyboardModifier`   | `string`  | Key code (e.g., 'Shift', 'c') to hold to enable.  |
-
-<Callout type="warning">
-  Remember to set `disableDrag={true}` on the main `<Timeline />` when cut mode
-  is active to prevent accidental block movements while splitting!
+<Callout type="info">
+  **Key constraint:** Every geometry prop (`scale`, `scaleWidth`, `startLeft`, `rowHeight`) must be
+  identical in both `<Timeline>` and `<CutOverlay>`, otherwise the blade and block positions won't align.
 </Callout>
+
+## Visual Configuration
+
+Customize the blade's appearance via the `config` prop:
+
+```tsx
+<CutOverlay
+  {/* ...required geometry props... */}
+  config={{
+    bladeColor: '#3b82f6',               // Vertical blade line color
+    showPill: true,                        // Show floating time label
+    formatPillLabel: (time) => `${time.toFixed(1)}s`,  // Custom label format
+    pillColor: '#1e3a8a',                 // Label background
+    pillTextColor: '#ffffff',             // Label text color
+    showBlockHighlight: true,             // Highlight hovered block
+    blockHighlightColor: 'rgba(59,130,246,0.15)',
+    blockHighlightBorderColor: 'rgba(59,130,246,0.4)',
+    cursor: 'crosshair',                  // Custom cursor
+    keyboardModifier: 'Shift',            // Hold Shift to activate
+  }}
+  onCut={handleCut}
+/>
+```
+
+## `splitActionInRow` Utility
+
+```typescript
+import { splitActionInRow } from '@keplar-404/react-timeline-editor';
+
+const newData = splitActionInRow(
+  data,       // Current TimelineRow[]
+  'row-1',    // Row ID
+  'action-1', // Action ID to split
+  5,          // Cut time in seconds
+);
+
+// Result: the action [0, 10] becomes two: [0, 5] and [5, 10]
+```
+
+The original action's `effectId` and `data` are inherited by both resulting pieces.

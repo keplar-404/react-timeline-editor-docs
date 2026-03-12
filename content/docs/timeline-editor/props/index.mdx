@@ -1,0 +1,48 @@
+---
+title: Props
+description: Detailed property reference for the Timeline Editor component.
+---
+
+## Property Reference
+
+| Property | Description | Type | Default |
+| :--- | :--- | :--- | :--- |
+| **scrollTop** | Scroll distance from the top of the editing area (@deprecated Please use `ref.setScrollTop` instead) | `number` | -- |
+| **onScroll** | Editing area scroll callback (used to control synchronization with editing line scrolling) | `(params: OnScrollParams) => void` | -- |
+| **autoScroll** | Whether to enable auto-scroll during dragging | `boolean` | `false` |
+| **style** | Custom timeline style | `CSSProperties` | -- |
+| **autoReRender** | Whether to automatically re-render (update tick when data changes or cursor time changes) | `boolean` | `true` |
+| **onChange** | Data change callback, triggered after data is changed at the end of operation (returning false prevents automatic engine synchronization, used to reduce performance overhead) | `(editorData: TimelineRow[]) => boolean \| void` | -- |
+| **editorData** | Timeline editing data | `TimelineRow[]` | (Required) |
+| **effects** | Timeline action effect map | `Record<string, TimelineEffect>` | (Required) |
+| **scale** | Single scale mark category (>0) | `number` | `1` |
+| **minScaleCount** | Minimum number of scales (>=1) | `number` | `20` |
+| **maxScaleCount** | Maximum number of scales (>=minScaleCount) | `number` | `Infinity` |
+| **scaleSplitCount** | Number of subdivisions per scale (>0 integer) | `number` | `10` |
+| **scaleWidth** | Display width of a single scale (>0, unit: px) | `number` | `160` |
+| **startLeft** | Distance from the left side of the scale start (>=0, unit: px) | `number` | `20` |
+| **rowHeight** | Default height of each editing line (>0, unit: px) | `number` | `32` |
+| **gridSnap** | Whether to enable grid movement snap | `boolean` | `false` |
+| **dragLine** | Enable drag auxiliary line snap | `boolean` | `false` |
+| **hideCursor** | Whether to hide the cursor | `boolean` | `false` |
+| **disableDrag** | Disable all action area dragging | `boolean` | `false` |
+| **engine** | Timeline runner, uses built-in runner if not passed | `TimelineEngine` | -- |
+| **getActionRender** | Custom action area rendering | `(action: TimelineAction, row: TimelineRow) => ReactNode` | -- |
+| **getScaleRender** | Custom scale rendering | `(scale: number) => ReactNode` | -- |
+| **onActionMoveStart** | Start moving callback | `(params: \{ action: TimelineAction; row: TimelineRow; \}) => void` | -- |
+| **onActionMoving** | Moving callback (return false to prevent movement) | `(params: \{ action: TimelineAction; row: TimelineRow; start: number; end: number; \}) => boolean \| void` | -- |
+| **onActionMoveEnd** | Move end callback (return false to prevent onChange from triggering) | `(params: \{ action: TimelineAction; row: TimelineRow; start: number; end: number; \}) => void` | -- |
+| **onActionResizeStart** | Start resizing callback | `(params: \{ action: TimelineAction; row: TimelineRow; dir: "right" \| "left"; \}) => void` | -- |
+| **onActionResizing** | Resize callback (return false to prevent change) | `(params: \{ action: TimelineAction; row: TimelineRow; start: number; end: number; dir: "right" \| "left"; \}) => boolean \| void` | -- |
+| **onActionResizeEnd** | Resize end callback (return false to prevent onChange from triggering) | `(params: \{ action: TimelineAction; row: TimelineRow; start: number; end: number; dir: "right" \| "left"; \}) => void` | -- |
+| **onClickRow** | Click row callback | `(e: MouseEvent<HTMLElement, MouseEvent>, param: \{ row: TimelineRow; time: number; \}) => void` | -- |
+| **onClickAction** | Click action callback | `(e: MouseEvent<HTMLElement, MouseEvent>, param: \{ action: TimelineAction; row: TimelineRow; time: number; \}) => void` | -- |
+| **onClickActionOnly** | Click action callback (not executed when drag is triggered) | `(e: MouseEvent<HTMLElement, MouseEvent>, param: \{ action: TimelineAction; row: TimelineRow; time: number; \}) => void` | -- |
+| **onDoubleClickRow** | Double click row callback | `(e: MouseEvent<HTMLElement, MouseEvent>, param: \{ row: TimelineRow; time: number; \}) => void` | -- |
+| **onDoubleClickAction** | Double click action callback | `(e: MouseEvent<HTMLElement, MouseEvent>, param: \{ action: TimelineAction; row: TimelineRow; time: number; \}) => void` | -- |
+| **onCursorDragStart** | Cursor start drag event | `(time: number) => void` | -- |
+| **onCursorDragEnd** | Cursor end drag event | `(time: number) => void` | -- |
+| **onCursorDrag** | Cursor drag event | `(time: number) => void` | -- |
+| **onClickTimeArea** | Click time area event, return false to prevent setting time | `(time: number, e: MouseEvent<HTMLDivElement, MouseEvent>) => boolean` | -- |
+| **ref** | Component ref | `Ref<TimelineState>` | -- |
+| **key** | React key | `Key` | -- |

@@ -12,6 +12,8 @@
     "format": "biome format --write"
   },
   "dependencies": {
+    "@keplar-404/react-timeline-editor": "^1.0.11",
+    "@keplar-404/timeline-engine": "^1.0.11",
     "@takumi-rs/image-response": "^0.70.4",
     "flexsearch": "^0.8.212",
     "fumadocs-core": "16.6.11",
@@ -24,6 +26,7 @@
     "tailwind-merge": "^3.5.0"
   },
   "devDependencies": {
+    "@biomejs/biome": "^2.4.6",
     "@tailwindcss/postcss": "^4.2.1",
     "@types/mdx": "^2.0.13",
     "@types/node": "^25.3.5",
@@ -31,7 +34,6 @@
     "@types/react-dom": "^19.2.3",
     "postcss": "^8.5.8",
     "tailwindcss": "^4.2.1",
-    "typescript": "^5.9.3",
-    "@biomejs/biome": "^2.4.6"
+    "typescript": "^5.9.3"
   }
 }

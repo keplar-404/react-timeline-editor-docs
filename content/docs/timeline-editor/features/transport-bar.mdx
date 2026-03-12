@@ -1,0 +1,116 @@
+---
+title: Transport Bar
+description: Add a professional play/pause/seek/loop control UI to your timeline with useTimelinePlayer and TransportBar.
+---
+
+import { Callout } from "fumadocs-ui/components/callout";
+
+The `TransportBar` is a pre-built playback control UI designed to work seamlessly with `useTimelinePlayer`. It provides a professional-grade playback interface out of the box.
+
+## What It Includes
+
+- **Transport controls**: Return to start, Rewind, Play/Pause, Forward, Stop
+- **Time display**: Formatted `M:SS.cs` readout
+- **Playback rate**: Speed selector (0.25x, 0.5x, 1x, 2x, 4x)
+- **Loop controls**: Toggle and input fields for loop region
+
+## Basic Usage
+
+```tsx
+import React, { useState, useRef } from 'react';
+import {
+  Timeline,
+  TimelineState,
+  TransportBar,
+  useTimelinePlayer,
+} from '@keplar-404/react-timeline-editor';
+
+export const EditorWithTransport = () => {
+  const timelineRef = useRef<TimelineState>(null);
+  const [data, setData] = useState([]);
+
+  // 1. Initialize the player hook — it attaches engine listeners automatically
+  const player = useTimelinePlayer(timelineRef);
+
+  return (
+    <div className="editor-container">
+      {/* 2. Render the bar and pass the player object */}
+      <TransportBar player={player} />
+
+      <Timeline
+        ref={timelineRef}
+        editorData={data}
+        effects={{}}
+        onChange={setData}
+      />
+
+      <style>{`
+        .editor-container {
+          background: #1a1a1a;
+          border-radius: 8px;
+          overflow: hidden;
+        }
+      `}</style>
+    </div>
+  );
+};
+```
+
+## With Loop Controls
+
+Integrate a loop region by passing the `loop` configuration:
+
+```tsx
+export const EditorWithLoopTransport = () => {
+  const timelineRef = useRef<TimelineState>(null);
+  const [loopOn, setLoopOn] = useState(false);
+  const [loopStart, setLoopStart] = useState(1);
+  const [loopEnd, setLoopEnd] = useState(5);
+
+  const player = useTimelinePlayer(timelineRef, {
+    loop: { enabled: loopOn, start: loopStart, end: loopEnd },
+  });
+
+  return (
+    <>
+      <TransportBar
+        player={player}
+        loop={{
+          enabled: loopOn,
+          start: loopStart,
+          end: loopEnd,
+          onToggle: () => setLoopOn(!loopOn),
+          onStartChange: setLoopStart,
+          onEndChange: setLoopEnd,
+        }}
+      />
+      <Timeline ref={timelineRef} editorData={[]} effects={{}} />
+    </>
+  );
+};
+```
+
+## Using the Player API Directly
+
+If you prefer to build your own UI, use `useTimelinePlayer` directly:
+
+```tsx
+const player = useTimelinePlayer(timelineRef);
+
+// player.isPlaying    → boolean
+// player.currentTime  → number (seconds)
+// player.playRate     → number (speed multiplier)
+// player.play()       → start playback
+// player.pause()      → pause
+// player.stop()       → stop and reset to 0
+// player.toStart()    → jump to time 0
+// player.rewind()     → jump back by seekStep seconds (default 5s)
+// player.forward()    → jump forward by seekStep seconds
+// player.setTime(t)   → jump to a specific time
+// player.setPlayRate(r) → change playback speed
+```
+
+<Callout type="info">
+  See the [Transport Bar API Reference](/docs/timeline-editor/api-reference/transport-bar) for the
+  full props and return types of both `TransportBar` and `useTimelinePlayer`.
+</Callout>

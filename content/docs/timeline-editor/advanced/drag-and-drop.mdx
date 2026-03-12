@@ -1,61 +1,115 @@
 ---
-title: Drag & Drop
-description: Reorder tracks and move actions between rows.
+title: Row & Cross-Row Drag
+description: Enable drag-to-reorder entire tracks and drag action blocks between different rows.
 ---
 
 import { Callout } from "fumadocs-ui/components/callout";
+import { RowDragPreview } from "@/components/timeline-preview";
 
-`@keplar-404/react-timeline-editor` introduces advanced drag-and-drop capabilities that go beyond simple time seeking. You can reorder entire tracks or move actions across different rows.
+The `@keplar-404/react-timeline-editor` introduces two powerful drag-and-drop features:
 
-## 1. Row Reordering (Track Sorting)
+1. **Row Reordering** (`enableRowDrag`) — drag entire tracks vertically
+2. **Cross-Row Block Dragging** (`enableCrossRowDrag`) — move action blocks between different rows
 
-You can allow users to vertically drag row headers to reorder the entire timeline data structure.
+## Live Preview — Row Reordering
 
-### Enabling Row Drag
+<RowDragPreview />
 
-Enable this feature by setting `enableRowDrag={true}`. You must also handle the `onRowDragEnd` event to update your data's order.
+## Row Reordering
+
+Enable row drag sorting by setting `enableRowDrag={true}`. The engine calculates the new sorted order and provides it in `onRowDragEnd`:
+
+```tsx
+import { Timeline, TimelineRow, TimelineEffect } from '@keplar-404/react-timeline-editor';
+import React, { useState } from 'react';
+
+const mockData: TimelineRow[] = [
+  { id: 'Track A', actions: [] },
+  { id: 'Track B', actions: [] },
+  { id: 'Track C', actions: [] },
+];
+
+export const EditorRowDrag = () => {
+  const [data, setData] = useState(mockData);
+
+  return (
+    <Timeline
+      editorData={data}
+      effects={{}}
+      onChange={setData}
+      enableRowDrag={true}
+      onRowDragStart={({ row }) => {
+        console.log('Started dragging row:', row.id);
+      }}
+      onRowDragEnd={({ row, editorData }) => {
+        // The engine provides the updated sorted array — just set it!
+        setData(editorData as TimelineRow[]);
+      }}
+    />
+  );
+};
+```
+
+<Callout type="info">
+  The `onRowDragEnd` callback receives `editorData` — the **new sorted array** after the drop.
+  You don't need to manually reorder the array; just call `setData(editorData)`.
+</Callout>
+
+## Cross-Row Block Dragging
+
+Allow users to grab an action from one row and drop it into another:
+
+```tsx
+export const EditorCrossRowDrag = () => {
+  const [data, setData] = useState(mockData);
+
+  return (
+    <Timeline
+      editorData={data}
+      effects={{}}
+      onChange={setData}
+      enableCrossRowDrag={true}
+    />
+  );
+};
+```
+
+During the drag, a ghost preview follows the cursor. By default it's a blue glowing box.
+
+## Custom Ghost Preview
+
+Use `getGhostPreview` to render a fully custom ghost that matches your block's actual appearance:
 
 ```tsx
 <Timeline
   editorData={data}
+  effects={{}}
   onChange={setData}
-  enableRowDrag={true} // [!code highlight]
-  onRowDragEnd={({ row, editorData }) => {
-    // The engine calculates the new sorted array for you!
-    setData(editorData);
-  }}
+  enableCrossRowDrag={true}
+  getGhostPreview={({ action, row }) => (
+    <div className="custom-ghost-preview">
+      <span>Moving: {action.id}</span>
+    </div>
+  )}
 />
 ```
 
-When enabled, the row headers become draggable handles.
-
----
-
-## 2. Cross-Row Action Dragging
-
-Standard timelines often restrict actions to their original track. This fork allows you to drag an action block vertically into a different row.
-
-### Enabling Cross-Row Drag
-
-Set `enableCrossRowDrag={true}` to allow vertical movement between tracks.
-
-```tsx
-<Timeline
-  editorData={data}
-  onChange={setData}
-  effects={effects}
-  enableCrossRowDrag={true} // [!code highlight]
-/>
+```css
+.custom-ghost-preview {
+  background: #1a3a5c;
+  border: 2px solid #3b82f6;
+  height: 100%;
+  border-radius: 4px;
+  padding: 0 8px;
+  display: flex;
+  align-items: center;
+  color: #3b82f6;
+  font-size: 12px;
+}
 ```
 
-### Ghost Previews
-
-When dragging a block between rows, the editor displays a "Ghost Preview" that follows the cursor to indicate where the block will land.
-
-- **`enableGhostPreview`**: (Default `true`) Toggles the visibility of the preview.
-- **`getGhostPreview`**: Allows you to provide a custom React node for the preview. See [Customization](/docs/timeline-editor/advanced/customization) for details.
-
-<Callout type="warning">
-  Ensure that the target row has a valid `TimelineEffect` for the block being
-  moved, or use `onActionMoving` to validate/prevent illegal moves!
+<Callout type="tip">
+  For the best user experience, render the **same content** in both `getActionRender` and
+  `getGhostPreview`. This creates a smooth visual continuity between the real block and
+  the ghost following the cursor.
 </Callout>

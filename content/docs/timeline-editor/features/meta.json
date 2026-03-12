@@ -1,0 +1,16 @@
+{
+  "title": "Features",
+  "icon": "Layers",
+  "pages": [
+    "scale-customization",
+    "action-config",
+    "custom-style",
+    "grid-snap",
+    "aux-line-snap",
+    "events",
+    "scroll-sync",
+    "auto-scroll",
+    "transport-bar",
+    "loop-zone"
+  ]
+}

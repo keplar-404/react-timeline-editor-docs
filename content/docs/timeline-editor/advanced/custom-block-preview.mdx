@@ -1,0 +1,95 @@
+---
+title: Custom Block Preview
+description: Render a matching ghost preview when dragging action blocks between rows.
+---
+
+import { Callout } from "fumadocs-ui/components/callout";
+
+When a user drags an action block across different rows using `enableCrossRowDrag`, the editor displays a **ghost preview** that follows the mouse cursor.
+
+By default, the ghost is a generic blue glowing box. You can use `getGhostPreview` to render a React node that exactly matches the visual appearance of your actual block.
+
+## How It Works
+
+The `<Timeline>` maintains a ghost preview wrapper `div` internally:
+
+- When `getGhostPreview` is **omitted**: the wrapper shows a blue glassmorphism effect
+- When `getGhostPreview` is **provided**: the wrapper gets `overflow: hidden; opacity: 0.85;` and lets your custom JSX control all styling
+
+## Example: Matching Ghost to Real Block
+
+The best pattern is to use the **same render function** for both the real block and the ghost:
+
+```tsx
+import { Timeline, TimelineRow } from '@keplar-404/react-timeline-editor';
+import React, { useState } from 'react';
+
+const mockData: TimelineRow[] = [
+  {
+    id: 'track-1',
+    actions: [{ id: 'action-1', start: 0, end: 2, effectId: 'effect0' }],
+  },
+  { id: 'track-2', actions: [] },
+];
+
+// Shared render function — used for both real block and ghost
+const renderBlockContent = (actionId: string) => (
+  <div className="custom-block">
+    <span>🎵 {actionId}</span>
+  </div>
+);
+
+export const EditorCustomGhost = () => {
+  const [data, setData] = useState(mockData);
+
+  return (
+    <div className="timeline-container">
+      <Timeline
+        editorData={data}
+        effects={{}}
+        onChange={setData}
+        enableCrossRowDrag={true}
+        // 1. Render the real block content
+        getActionRender={(action, row) => renderBlockContent(action.id)}
+        // 2. Render the ghost with the same function
+        getGhostPreview={({ action, row }) => renderBlockContent(action.id)}
+      />
+
+      <style>{`
+        .timeline-container { width: 100%; border: 1px solid #333; }
+
+        .custom-block {
+          background-color: #cd9541;
+          border-radius: 4px;
+          height: 100%;
+          width: 100%;
+          display: flex;
+          align-items: center;
+          padding-left: 8px;
+          color: white;
+          font-size: 12px;
+          box-sizing: border-box;
+        }
+      `}</style>
+    </div>
+  );
+};
+```
+
+## Data in `getGhostPreview`
+
+The callback receives the `action` and source `row` being dragged:
+
+```typescript
+getGhostPreview?: (params: {
+  action: TimelineAction;
+  row: TimelineRow;
+}) => ReactNode;
+```
+
+You can use `action.effectId`, `action.data`, or any field to render the right preview for each block type.
+
+<Callout type="tip">
+  If your actions have custom `data` attached (e.g., asset thumbnails), you can surface that
+  in the ghost preview for a highly polished editing experience.
+</Callout>
