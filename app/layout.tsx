@@ -6,6 +6,11 @@ const inter = Inter({
   subsets: ['latin'],
 });
 
+export const metadata = {
+  title: 'TMX - Professional React Timeline Editor',
+  description: 'A powerful, high-performance component library for building timeline animation and video editors in React.',
+};
+
 export default function Layout({ children }: LayoutProps<'/'>) {
   return (
     <html lang="en" className={inter.className} suppressHydrationWarning>
