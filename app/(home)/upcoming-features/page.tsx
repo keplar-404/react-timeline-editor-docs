@@ -6,13 +6,13 @@ import { Roadmap, RoadmapPhase } from '@/components/roadmap';
 const roadmapData: RoadmapPhase[] = [
   {
     phase: 'Phase 8',
-    title: 'Modern Compiler Support',
+    title: 'Future Proofing',
     status: 'planned',
-    description: 'Preparing the library for the future of React and high-performance compilation.',
+    description: 'Preparing the library for the next generation of React and performance optimizations.',
     features: [
       {
         title: 'React 19 Compiler Compatibility',
-        description: 'Optimizing hooks and component structures for the React 19 compiler.',
+        description: 'Optimizing codebase for the upcoming React 19 compiler for zero-cost reactivity.',
         status: 'planned',
         icon: Cpu,
       },
@@ -20,27 +20,33 @@ const roadmapData: RoadmapPhase[] = [
   },
   {
     phase: 'Phase 7',
-    title: 'Stability & Bug Fixes',
+    title: 'Stability & Bug Squashing',
     status: 'released',
-    description: 'Refining the core logic for a smoother editing experience.',
+    description: 'Refining the core logic and resolving edge cases in complex interactions.',
     features: [
       {
-        title: 'Timeline Loop Bug Fix',
-        description: 'Resolved inconsistencies in loop-back behavior and handle dragging sync.',
+        title: 'Timeline Loop Stability',
+        description: 'Fixed critical bugs in the timeline loop back logic and handle dragging synchronization.',
         status: 'released',
         icon: Zap,
+      },
+      {
+        title: 'CSS Import Resolution',
+        description: 'Fixed package import issues to ensure styles load correctly in all build environments.',
+        status: 'released',
+        icon: Layout,
       },
     ],
   },
   {
     phase: 'Phase 6',
-    title: 'Distribution',
+    title: 'Distribution & Ecosystem',
     status: 'released',
-    description: 'Making the project available to the global developer community.',
+    description: 'Official release and preparation for public consumption.',
     features: [
       {
         title: 'NPM Publication',
-        description: 'Official release of @keplar-404/react-timeline-editor on the npm registry.',
+        description: 'Official release to the npm registry for easy integration into React projects.',
         status: 'released',
         icon: Rocket,
       },
@@ -48,27 +54,39 @@ const roadmapData: RoadmapPhase[] = [
   },
   {
     phase: 'Phase 5',
-    title: 'Enhanced UX Patterns',
+    title: 'Visual Excellence',
     status: 'released',
-    description: 'Further improvements to the editing workflow and visual feedback.',
+    description: 'Enhancing the feedback system and visual clarity of the editor.',
     features: [
       {
-        title: 'Extended Feature Set',
-        description: 'Added various workflow enhancements and interaction polish.',
+        title: 'Block & Custom Previews',
+        description: 'Added support for detailed block previews and fully custom action rendering.',
         status: 'released',
         icon: Layers,
+      },
+      {
+        title: 'Loop Area Highlighting',
+        description: 'Implemented visual overlays and handles for designated loop regions.',
+        status: 'released',
+        icon: Rocket,
       },
     ],
   },
   {
     phase: 'Phase 4',
-    title: 'Workflow Improvements',
+    title: 'Precision Editing',
     status: 'released',
-    description: 'Expanding the basic editing capabilities with user-requested features.',
+    description: 'Tools for fine-grained control and professional editing workflows.',
     features: [
       {
-        title: 'Additional Features',
-        description: 'Implementation of several missing standard editing functions.',
+        title: 'Blade / Cut Mechanism',
+        description: 'Advanced action splitting with dedicated key strokes (Hold C) and custom cursors.',
+        status: 'released',
+        icon: Scissors,
+      },
+      {
+        title: 'Transport Bar Controls',
+        description: 'Pre-built component for Play, Pause, Seek, and Loop state management.',
         status: 'released',
         icon: Sliders,
       },
@@ -76,13 +94,19 @@ const roadmapData: RoadmapPhase[] = [
   },
   {
     phase: 'Phase 3',
-    title: 'Quality Assurance',
+    title: 'Core Interaction Engine',
     status: 'released',
-    description: 'Cleaning up the codebase and squashing initial implementation bugs.',
+    description: 'Stabilizing the fundamental movement and placement logic.',
     features: [
       {
-        title: 'Bug Fix Sweep',
-        description: 'Comprehensive fix for reported issues during early testing.',
+        title: 'Block & Row Drag-and-Drop',
+        description: 'Natively handle moving blocks across tracks and reordering entire rows.',
+        status: 'released',
+        icon: Move,
+      },
+      {
+        title: 'Smart Grid Snapping',
+        description: 'High-performance snapping system for alignment and time precision.',
         status: 'released',
         icon: Zap,
       },
@@ -90,27 +114,33 @@ const roadmapData: RoadmapPhase[] = [
   },
   {
     phase: 'Phase 2',
-    title: 'Feature Implementation',
+    title: 'Modern Infrastructure',
     status: 'released',
-    description: 'Building out the main interactive features of the timeline editor.',
+    description: 'Upgrading the development environment for speed and maintainability.',
     features: [
       {
-        title: 'Core Feature Expansion',
-        description: 'Adding multi-track support, action customization, and basic snapping.',
+        title: 'Bun Ecosystem Migration',
+        description: 'Replaced Yarn with Bun for lightning-fast installs and project compilation.',
         status: 'released',
-        icon: Layers,
+        icon: Zap,
+      },
+      {
+        title: 'Pure CSS Architecture',
+        description: 'Completely removed LESS from the project in favor of optimized Vanilla CSS.',
+        status: 'released',
+        icon: Layout,
       },
     ],
   },
   {
     phase: 'Phase 1',
-    title: 'The Foundation',
+    title: 'The Rebirth',
     status: 'released',
-    description: 'Forked from the original unmaintained project to fix critical architecture issues and missing modern features.',
+    description: 'Forked the original unmaintained project to build a modernized, feature-rich timeline editor.',
     features: [
       {
-        title: 'Project Fork & Audit',
-        description: 'Complete audit of the original codebase to identify performance bottlenecks.',
+        title: 'Project Audit & Fork',
+        description: 'Rescued the core engine and identified key areas for modernization.',
         status: 'released',
         icon: Move,
       },
