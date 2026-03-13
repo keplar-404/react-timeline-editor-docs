@@ -38,15 +38,18 @@ export const EditorWithTransport = () => {
   const player = useTimelinePlayer(timelineRef);
 
   return (
-    <div className="editor-container">
+    <div className="timeline-preview-container">
       {/* 2. Render the bar and pass the player object */}
-      <TransportBar player={player} />
+      <div style={{ borderBottom: "1px solid #333", flexShrink: 0 }}>
+        <TransportBar player={player} />
+      </div>
 
       <div style={{ flex: 1, position: "relative" }}>
         <Timeline
           ref={timelineRef}
           editorData={data}
           effects={{}}
+          autoScroll={true}
           onChange={setData}
           style={{ width: "100%", height: "100%" }}
         />
@@ -75,6 +78,9 @@ Integrate a loop region by passing the `loop` configuration:
 ```tsx
 export const EditorWithLoopTransport = () => {
   const timelineRef = useRef<TimelineState>(null);
+  const [data, setData] = useState([
+    { id: "Track 1", actions: [{ id: "A", start: 0, end: 10, effectId: "effect0" }] }
+  ]);
   const [loopOn, setLoopOn] = useState(false);
   const [loopStart, setLoopStart] = useState(1);
   const [loopEnd, setLoopEnd] = useState(5);
@@ -84,20 +90,28 @@ export const EditorWithLoopTransport = () => {
   });
 
   return (
-    <div style={{ width: "100%", height: "400px", display: "flex", flexDirection: "column" }}>
-      <TransportBar
-        player={player}
-        loop={{
-          enabled: loopOn,
-          start: loopStart,
-          end: loopEnd,
-          onToggle: () => setLoopOn(!loopOn),
-          onStartChange: setLoopStart,
-          onEndChange: setLoopEnd,
-        }}
-      />
+    <div className="timeline-preview-container">
+      <div style={{ borderBottom: "1px solid #333", flexShrink: 0 }}>
+        <TransportBar
+          player={player}
+          loop={{
+            enabled: loopOn,
+            start: loopStart,
+            end: loopEnd,
+            onToggle: () => setLoopOn(!loopOn),
+            onStartChange: setLoopStart,
+            onEndChange: setLoopEnd,
+          }}
+        />
+      </div>
       <div style={{ flex: 1, position: "relative" }}>
-        <Timeline ref={timelineRef} editorData={[]} effects={{}} style={{ width: "100%", height: "100%" }} />
+        <Timeline 
+          ref={timelineRef} 
+          editorData={data} 
+          effects={{}} 
+          autoScroll={true}
+          style={{ width: "100%", height: "100%" }} 
+        />
       </div>
     </div>
   );

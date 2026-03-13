@@ -18,3 +18,21 @@
     height: 300px;
   }
 }
+
+/* Override Transport Bar styling to increase height and size */
+.timeline-transport-bar {
+  height: 64px !important;
+  padding: 0 24px !important;
+}
+.timeline-transport-btn {
+  width: 40px !important;
+  height: 40px !important;
+  border-radius: 8px !important;
+}
+.timeline-transport-btn svg {
+  width: 20px;
+  height: 20px;
+}
+.timeline-transport-time-value {
+  font-size: 26px !important;
+}

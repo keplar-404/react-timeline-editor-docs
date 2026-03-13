@@ -4,35 +4,7 @@ import React, { useState, useRef } from "react";
 import type { TimelineRow, TimelineEffect, TimelineState } from "@keplar-404/react-timeline-editor";
 import "@keplar-404/react-timeline-editor/dist/react-timeline-editor.css";
 
-// Dynamic import wrapper for the Timeline component (avoids SSR issues)
-import dynamic from "next/dynamic";
-
-const Timeline = dynamic(
-  () =>
-    import("@keplar-404/react-timeline-editor").then((mod) => mod.Timeline),
-  { ssr: false },
-);
-
-const TransportBar = dynamic(
-  () =>
-    import("@keplar-404/react-timeline-editor").then((mod) => mod.TransportBar),
-  { ssr: false },
-);
-
-const LoopZoneOverlay = dynamic(
-  () =>
-    import("@keplar-404/react-timeline-editor").then((mod) => mod.LoopZoneOverlay),
-  { ssr: false },
-);
-
-const CutOverlay = dynamic(
-  () =>
-    import("@keplar-404/react-timeline-editor").then((mod) => mod.CutOverlay),
-  { ssr: false },
-);
-
-// Dynamic imports for hooks/utils need to be awaited or used in components, but standard imports for types/utils are fine
-import { useTimelinePlayer, splitActionInRow } from "@keplar-404/react-timeline-editor";
+import { Timeline, TransportBar, LoopZoneOverlay, CutOverlay, useTimelinePlayer, splitActionInRow } from "@keplar-404/react-timeline-editor";
 
 // ─── Basic Usage Example ──────────────────────────────────────────────────────
 
@@ -509,7 +481,21 @@ export function CutBlockPreview() {
 
 export function TransportBarPreview() {
   const timelineRef = useRef<TimelineState | null>(null);
-  const [data, setData] = useState<TimelineRow[]>([{ id: "0", actions: [] }]);
+  const [data, setData] = useState<TimelineRow[]>([
+    {
+      id: "Row 1",
+      actions: [
+        { id: "A1", start: 0, end: 4, effectId: "effect0" },
+        { id: "A2", start: 6, end: 10, effectId: "effect1" },
+      ],
+    },
+    {
+      id: "Row 2",
+      actions: [
+        { id: "B1", start: 2, end: 8, effectId: "effect0" },
+      ],
+    },
+  ]);
   const [loopOn, setLoopOn] = useState(false);
   const [loopStart, setLoopStart] = useState(1);
   const [loopEnd, setLoopEnd] = useState(5);
@@ -536,7 +522,14 @@ export function TransportBarPreview() {
         />
       </div>
       <div style={{ flex: 1, overflow: "hidden", position: "relative" }}>
-        <Timeline ref={timelineRef} editorData={data} effects={{}} onChange={(d) => setData(d as TimelineRow[])} style={{ width: "100%", height: "100%" }} />
+        <Timeline 
+          ref={timelineRef} 
+          editorData={data} 
+          effects={basicMockEffect} 
+          autoScroll={true}
+          onChange={(d) => setData(d as TimelineRow[])} 
+          style={{ width: "100%", height: "100%" }} 
+        />
       </div>
     </div>
   );
