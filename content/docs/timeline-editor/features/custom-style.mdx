@@ -17,20 +17,24 @@ The preview shows two custom action types: an orange "Audio" block and a purple 
 ## Custom Render via `getActionRender`
 
 ```tsx
-import React, { useState } from 'react';
-import { Timeline, TimelineRow, TimelineEffect } from '@keplar-404/react-timeline-editor';
+import React, { useState } from "react";
+import {
+  Timeline,
+  TimelineRow,
+  TimelineEffect,
+} from "@keplar-404/react-timeline-editor";
 
 const mockEffect: Record<string, TimelineEffect> = {
-  effect0: { id: 'effect0', name: 'Audio Effect' },
-  effect1: { id: 'effect1', name: 'Video Effect' },
+  effect0: { id: "effect0", name: "Audio Effect" },
+  effect1: { id: "effect1", name: "Video Effect" },
 };
 
 const mockData: TimelineRow[] = [
   {
-    id: 'track-1',
+    id: "track-1",
     actions: [
-      { id: 'action-0', start: 0, end: 2, effectId: 'effect0' },
-      { id: 'action-1', start: 3, end: 5, effectId: 'effect1' },
+      { id: "action-0", start: 0, end: 2, effectId: "effect0" },
+      { id: "action-1", start: 3, end: 5, effectId: "effect1" },
     ],
   },
 ];
@@ -45,13 +49,13 @@ export const EditorCustomStyle = () => {
         effects={mockEffect}
         onChange={setData}
         getActionRender={(action, row) => {
-          if (action.effectId === 'effect0') {
+          if (action.effectId === "effect0") {
             return (
               <div className="custom-effect-audio">
                 <span className="effect-text">🎵 {action.id}</span>
               </div>
             );
-          } else if (action.effectId === 'effect1') {
+          } else if (action.effectId === "effect1") {
             return (
               <div className="custom-effect-video">
                 <span className="effect-text">🎬 {action.id}</span>
@@ -122,7 +126,7 @@ All block styling is done via standard CSS. Here are the classes used in the exa
 /* Override left/right resize handles */
 .custom-editor-wrapper .timeline-editor-action-left-stretch::after,
 .custom-editor-wrapper .timeline-editor-action-right-stretch::after {
-  content: '';
+  content: "";
   position: absolute;
   width: 18px;
   height: 18px;
@@ -142,16 +146,16 @@ All block styling is done via standard CSS. Here are the classes used in the exa
 
 <Callout type="tip">
   The built-in action wrapper automatically applies the class
-  `timeline-editor-action-effect-{effectId}` to each block. You can use this
-  to target blocks by effect in your CSS without needing `getActionRender` at all.
+  `timeline-editor-action-effect-{effectId}` to each block. You can use this to
+  target blocks by effect in your CSS without needing `getActionRender` at all.
 </Callout>
 
 ## CSS Class Reference
 
-| Class | Applied to |
-|:---|:---|
-| `.timeline-editor` | The root timeline element |
-| `.timeline-editor-action` | Each action block wrapper |
+| Class                                       | Applied to                                |
+| :------------------------------------------ | :---------------------------------------- |
+| `.timeline-editor`                          | The root timeline element                 |
+| `.timeline-editor-action`                   | Each action block wrapper                 |
 | `.timeline-editor-action-effect-{effectId}` | Action wrapper with effect-specific class |
-| `.timeline-editor-action-left-stretch` | Left resize handle |
-| `.timeline-editor-action-right-stretch` | Right resize handle |
+| `.timeline-editor-action-left-stretch`      | Left resize handle                        |
+| `.timeline-editor-action-right-stretch`     | Right resize handle                       |

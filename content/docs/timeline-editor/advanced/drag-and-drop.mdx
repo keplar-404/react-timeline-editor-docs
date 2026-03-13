@@ -4,7 +4,7 @@ description: Enable drag-to-reorder entire tracks and drag action blocks between
 ---
 
 import { Callout } from "fumadocs-ui/components/callout";
-import { RowDragPreview } from "@/components/timeline-preview";
+import { RowDragPreview, CrossRowDragPreview } from "@/components/timeline-preview";
 
 The `@keplar-404/react-timeline-editor` introduces two powerful drag-and-drop features:
 
@@ -58,6 +58,8 @@ export const EditorRowDrag = () => {
 ## Cross-Row Block Dragging
 
 Allow users to grab an action from one row and drop it into another:
+
+<CrossRowDragPreview />
 
 ```tsx
 export const EditorCrossRowDrag = () => {

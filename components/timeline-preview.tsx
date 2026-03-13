@@ -13,6 +13,27 @@ const Timeline = dynamic(
   { ssr: false },
 );
 
+const TransportBar = dynamic(
+  () =>
+    import("@keplar-404/react-timeline-editor").then((mod) => mod.TransportBar),
+  { ssr: false },
+);
+
+const LoopZoneOverlay = dynamic(
+  () =>
+    import("@keplar-404/react-timeline-editor").then((mod) => mod.LoopZoneOverlay),
+  { ssr: false },
+);
+
+const CutOverlay = dynamic(
+  () =>
+    import("@keplar-404/react-timeline-editor").then((mod) => mod.CutOverlay),
+  { ssr: false },
+);
+
+// Dynamic imports for hooks/utils need to be awaited or used in components, but standard imports for types/utils are fine
+import { useTimelinePlayer, splitActionInRow } from "@keplar-404/react-timeline-editor";
+
 // ─── Basic Usage Example ──────────────────────────────────────────────────────
 
 const basicMockData: TimelineRow[] = [
@@ -419,6 +440,281 @@ export function ScrollSyncPreview() {
           onChange={(d) => setData(d as TimelineRow[])}
           onScroll={handleScroll}
         />
+      </div>
+    </div>
+  );
+}
+
+// ─── Cut Block (Blade Tool) Preview ───────────────────────────────────────────
+
+const cutMockData: TimelineRow[] = [
+  {
+    id: "Track A",
+    actions: [{ id: "actionA", start: 0, end: 10, effectId: "effect0" }],
+  },
+  {
+    id: "Track B",
+    actions: [{ id: "actionB", start: 2, end: 8, effectId: "effect1" }],
+  },
+];
+
+export function CutBlockPreview() {
+  const [data, setData] = useState(cutMockData);
+  const [isCutMode, setIsCutMode] = useState(false);
+
+  const scale = 3;
+  const scaleSplitCount = 10;
+  const scaleWidth = 160;
+  const startLeft = 20;
+  const rowHeight = 32;
+  const editAreaTopOffset = 32;
+
+  const handleCut = (rowId: string, actionId: string, cutTime: number) => {
+    const newData = splitActionInRow(data, rowId, actionId, cutTime);
+    setData(newData);
+  };
+
+  return (
+    <div
+      style={{
+        border: "1px solid #333",
+        borderRadius: "6px",
+        overflow: "hidden",
+        background: "#1a1a1a",
+      }}
+    >
+      <div style={{ padding: "8px 12px", background: "#2a2a2a", borderBottom: "1px solid #444", display: "flex", gap: "10px", alignItems: "center" }}>
+        <button
+          onClick={() => setIsCutMode(!isCutMode)}
+          style={{
+            padding: "4px 10px",
+            background: isCutMode ? "#b91c1c" : "#2563eb",
+            color: "white",
+            border: "none",
+            borderRadius: "4px",
+            fontSize: "12px",
+            cursor: "pointer",
+          }}
+        >
+          {isCutMode ? "Disable Blade Active" : "Enable Blade Mode (Hold 'C')"}
+        </button>
+        <span style={{ fontSize: "12px", color: "#aaa" }}>
+          {isCutMode ? "Hover over actions and click to split them." : "Turn on blade mode to cut blocks."}
+        </span>
+      </div>
+      <div style={{ position: "relative" }}>
+        <Timeline
+          editorData={data}
+          effects={basicMockEffect}
+          onChange={(d) => setData(d as TimelineRow[])}
+          scale={scale}
+          scaleWidth={scaleWidth}
+          startLeft={startLeft}
+          rowHeight={rowHeight}
+          disableDrag={isCutMode}
+        />
+        <CutOverlay
+          data={data}
+          scale={scale}
+          scaleSplitCount={scaleSplitCount}
+          scaleWidth={scaleWidth}
+          startLeft={startLeft}
+          rowHeight={rowHeight}
+          editAreaTopOffset={editAreaTopOffset}
+          gridSnap={false}
+          config={{ keyboardModifier: "c", showPill: true, showBlockHighlight: true }}
+          onModifierChange={setIsCutMode}
+          onCut={handleCut}
+        />
+      </div>
+    </div>
+  );
+}
+
+// ─── Transport Bar Preview ────────────────────────────────────────────────────
+
+export function TransportBarPreview() {
+  const timelineRef = useRef<TimelineState | null>(null);
+  const [data, setData] = useState<TimelineRow[]>([{ id: "0", actions: [] }]);
+  const [loopOn, setLoopOn] = useState(false);
+  const [loopStart, setLoopStart] = useState(1);
+  const [loopEnd, setLoopEnd] = useState(5);
+
+  const player = useTimelinePlayer(timelineRef as React.RefObject<TimelineState>, {
+    loop: { enabled: loopOn, start: loopStart, end: loopEnd },
+  });
+
+  return (
+    <div
+      style={{
+        border: "1px solid #333",
+        borderRadius: "6px",
+        overflow: "hidden",
+        background: "#1a1a1a",
+      }}
+    >
+      <div style={{ borderBottom: "1px solid #333" }}>
+        <TransportBar
+          player={player}
+          loop={{
+            enabled: loopOn,
+            start: loopStart,
+            end: loopEnd,
+            onToggle: () => setLoopOn(!loopOn),
+            onStartChange: setLoopStart,
+            onEndChange: setLoopEnd,
+          }}
+        />
+      </div>
+      <Timeline ref={timelineRef} editorData={data} effects={{}} onChange={(d) => setData(d as TimelineRow[])} />
+    </div>
+  );
+}
+
+// ─── Loop Zone Preview ────────────────────────────────────────────────────────
+
+const loopZoneData: TimelineRow[] = [
+  { id: "Track A", actions: [{ id: "A", start: 0, end: 10, effectId: "effect0" }] },
+];
+
+export function LoopZonePreview() {
+  const [data, setData] = useState(loopZoneData);
+  const [loopOn, setLoopOn] = useState(true);
+  const [loopStart, setLoopStart] = useState(2);
+  const [loopEnd, setLoopEnd] = useState(6);
+  const [scrollLeft, setScrollLeft] = useState(0);
+
+  const scale = 1;
+  const scaleWidth = 160;
+  const startLeft = 20;
+
+  return (
+    <div
+      style={{
+        border: "1px solid #333",
+        borderRadius: "6px",
+        overflow: "hidden",
+        background: "#1a1a1a",
+      }}
+    >
+       <div style={{ padding: "8px 12px", background: "#2a2a2a", borderBottom: "1px solid #444", fontSize: "12px", color: "#aaa" }}>
+        <label style={{ display: "flex", gap: "8px", alignItems: "center", cursor: "pointer" }}>
+          <input type="checkbox" checked={loopOn} onChange={(e) => setLoopOn(e.target.checked)} />
+          Enable Loop Zone Overlay
+        </label>
+      </div>
+      <div style={{ position: "relative" }}>
+        <Timeline
+          scale={scale}
+          scaleWidth={scaleWidth}
+          startLeft={startLeft}
+          editorData={data}
+          effects={basicMockEffect}
+          onChange={(d) => setData(d as TimelineRow[])}
+          onScroll={(p) => setScrollLeft(p.scrollLeft)}
+        />
+        {loopOn && (
+          <LoopZoneOverlay
+            scale={scale}
+            scaleWidth={scaleWidth}
+            startLeft={startLeft}
+            scrollLeft={scrollLeft}
+            loopStart={loopStart}
+            loopEnd={loopEnd}
+            onLoopStartChange={setLoopStart}
+            onLoopEndChange={setLoopEnd}
+            config={{ bandColor: "#10b981", bandOpacity: 0.15, showBoundaryLines: true }}
+          />
+        )}
+      </div>
+    </div>
+  );
+}
+
+// ─── Cross Row Drag Preview ───────────────────────────────────────────────────
+
+export function CrossRowDragPreview() {
+  const [data, setData] = useState(rowDragData);
+  
+  return (
+    <div
+      style={{
+        border: "1px solid #333",
+        borderRadius: "6px",
+        overflow: "hidden",
+        background: "#1a1a1a",
+      }}
+    >
+      <div style={{ padding: "8px 12px", background: "#2a2a2a", borderBottom: "1px solid #444", fontSize: "12px", color: "#aaa" }}>
+        💡 Drag action blocks between different tracks
+      </div>
+      <Timeline
+        editorData={data}
+        effects={customStyleEffect}
+        onChange={(d) => setData(d as TimelineRow[])}
+        enableCrossRowDrag={true}
+        getGhostPreview={({ action }) => (
+          <div style={{ 
+            background: "rgba(59, 130, 246, 0.2)", 
+            border: "2px solid #3b82f6", 
+            height: "100%", 
+            borderRadius: "4px", 
+            display: "flex", 
+            alignItems: "center", 
+            padding: "0 8px", 
+            color: "#3b82f6", 
+            fontSize: "11px",
+            fontWeight: "bold"
+          }}>
+             Moving: {action.id}
+          </div>
+        )}
+      />
+    </div>
+  );
+}
+
+// ─── Events Preview ───────────────────────────────────────────────────────────
+
+export function EventsPreview() {
+  const [data, setData] = useState([{ id: "Click Track", actions: [{id: "action-a", start: 0, end: 4, effectId: "effect0"}] }]);
+  const [logs, setLogs] = useState<string[]>([]);
+
+  const addLog = (msg: string) => {
+    setLogs((prev) => [msg, ...prev].slice(0, 5)); // Keep last 5 logs
+  };
+
+  return (
+    <div
+      style={{
+        border: "1px solid #333",
+        borderRadius: "6px",
+        overflow: "hidden",
+        background: "#1a1a1a",
+        display: "flex",
+        flexDirection: "column"
+      }}
+    >
+      <Timeline
+        editorData={data}
+        effects={basicMockEffect}
+        onChange={(d) => setData(d as TimelineRow[])}
+        onClickAction={(e, { action, time }) => addLog(`Single-clicked action: ${action.id} at ${time.toFixed(2)}s`)}
+        onClickRow={(e, { row, time }) => addLog(`Single-clicked row: ${row.id} at ${time.toFixed(2)}s`)}
+        onClickTimeArea={(time) => { addLog(`Clicked time area at: ${time.toFixed(2)}s`); return true; }}
+        onDoubleClickRow={(e, { row, time }) => addLog(`Double-clicked row: ${row.id} at ${time.toFixed(2)}s`)}
+        onDoubleClickAction={(e, { action, time }) => addLog(`Double-clicked action: ${action.id} at ${time.toFixed(2)}s`)}
+      />
+      <div style={{ padding: "12px", background: "#111", borderTop: "1px solid #333" }}>
+        <h4 style={{ margin: "0 0 8px 0", fontSize: "12px", color: "#888", textTransform: "uppercase" }}>Event Log (Last 5)</h4>
+        <div style={{ display: "flex", flexDirection: "column", gap: "4px", minHeight: "100px" }}>
+          {logs.length === 0 ? <div style={{ fontSize: "13px", color: "#555" }}>Click around the timeline to see events...</div> : null}
+          {logs.map((log, i) => (
+            <div key={i} style={{ fontSize: "13px", color: i === 0 ? "#fff" : "#888", fontFamily: "monospace" }}>
+              {log}
+            </div>
+          ))}
+        </div>
       </div>
     </div>
   );
