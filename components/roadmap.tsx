@@ -81,7 +81,7 @@ export function Roadmap({ phases }: { phases: RoadmapPhase[] }) {
                     >
                       <div className="flex items-start gap-4">
                         {feature.icon && (
-                          <div className="flex-shrink-0 w-8 h-8 rounded-lg bg-fd-muted flex items-center justify-center group-hover:bg-fd-primary/10 transition-colors">
+                          <div className="shrink-0 w-8 h-8 rounded-lg bg-fd-muted flex items-center justify-center group-hover:bg-fd-primary/10 transition-colors">
                             <feature.icon className="w-4 h-4 text-fd-foreground group-hover:text-fd-primary transition-colors" />
                           </div>
                         )}
