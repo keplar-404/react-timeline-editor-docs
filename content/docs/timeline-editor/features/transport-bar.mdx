@@ -27,12 +27,14 @@ import {
   Timeline,
   TimelineState,
   TransportBar,
+  LoopZoneOverlay,
   useTimelinePlayer,
 } from '@keplar-404/react-timeline-editor';
 
 export const EditorWithTransport = () => {
   const timelineRef = useRef<TimelineState>(null);
   const [data, setData] = useState([]);
+  const [scrollLeft, setScrollLeft] = useState(0);
 
   // 1. Initialize the player hook — it attaches engine listeners automatically
   const player = useTimelinePlayer(timelineRef);
@@ -51,7 +53,13 @@ export const EditorWithTransport = () => {
           effects={{}}
           autoScroll={true}
           onChange={setData}
+          onScroll={(p) => setScrollLeft(p.scrollLeft)}
           style={{ width: "100%", height: "100%" }}
+        />
+        <LoopZoneOverlay
+          scrollLeft={scrollLeft}
+          loopStart={1}
+          loopEnd={5}
         />
       </div>
 
@@ -84,6 +92,7 @@ export const EditorWithLoopTransport = () => {
   const [loopOn, setLoopOn] = useState(false);
   const [loopStart, setLoopStart] = useState(1);
   const [loopEnd, setLoopEnd] = useState(5);
+  const [scrollLeft, setScrollLeft] = useState(0);
 
   const player = useTimelinePlayer(timelineRef, {
     loop: { enabled: loopOn, start: loopStart, end: loopEnd },
@@ -110,8 +119,18 @@ export const EditorWithLoopTransport = () => {
           editorData={data} 
           effects={{}} 
           autoScroll={true}
+          onScroll={(p) => setScrollLeft(p.scrollLeft)}
           style={{ width: "100%", height: "100%" }} 
         />
+        {loopOn && (
+          <LoopZoneOverlay
+            scrollLeft={scrollLeft}
+            loopStart={loopStart}
+            loopEnd={loopEnd}
+            onLoopStartChange={setLoopStart}
+            onLoopEndChange={setLoopEnd}
+          />
+        )}
       </div>
     </div>
   );
