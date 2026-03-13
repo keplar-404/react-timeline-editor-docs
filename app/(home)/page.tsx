@@ -1,5 +1,5 @@
 import Link from 'next/link';
-import { Github, ArrowRight, Layers, Zap, Scissors, Move, Sliders } from 'lucide-react';
+import { Github, ArrowRight, Layers, Zap, Scissors, Move, Sliders, Rocket } from 'lucide-react';
 
 const features = [
   {
@@ -39,9 +39,19 @@ export default function HomePage() {
           Open Source · MIT License
         </div>
 
-        <h1 className="text-5xl font-bold tracking-tight text-fd-foreground leading-tight mb-5">
+        <h1 className="text-5xl font-bold tracking-tight text-fd-foreground leading-tight mb-3">
           React Timeline Editor
+          <span className="ml-4 inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold bg-fd-primary/10 text-fd-primary border border-fd-primary/20 align-middle">
+            Alpha
+          </span>
         </h1>
+
+        <div className="mb-10">
+          <Link href="/upcoming-features" className="text-sm text-fd-muted-foreground hover:text-fd-primary transition-colors flex items-center justify-center gap-1">
+            <Rocket className="w-3.5 h-3.5" />
+            See what's coming in the Roadmap
+          </Link>
+        </div>
 
         <p className="text-lg text-fd-muted-foreground max-w-xl leading-relaxed mb-10">
           A powerful, high-performance component library for building timeline animation and video editors in React. Precise, extensible, and battle-tested.

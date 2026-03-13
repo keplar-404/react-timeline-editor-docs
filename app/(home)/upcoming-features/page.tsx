@@ -5,26 +5,84 @@ import { Roadmap, RoadmapPhase } from '@/components/roadmap';
 
 const roadmapData: RoadmapPhase[] = [
   {
-    phase: 'Phase 1',
-    title: 'Core Engine Evolution',
-    status: 'released',
-    description: 'Focus on performance stability, headless architecture, and standard editing tools.',
+    phase: 'Phase 8',
+    title: 'Modern Compiler Support',
+    status: 'planned',
+    description: 'Preparing the library for the future of React and high-performance compilation.',
     features: [
       {
-        title: 'Headless Engine Separation',
-        description: 'Decoupling the calculation engine from React rendering for flexible integrations.',
-        status: 'released',
+        title: 'React 19 Compiler Compatibility',
+        description: 'Optimizing hooks and component structures for the React 19 compiler.',
+        status: 'planned',
         icon: Cpu,
       },
+    ],
+  },
+  {
+    phase: 'Phase 7',
+    title: 'Stability & Bug Fixes',
+    status: 'released',
+    description: 'Refining the core logic for a smoother editing experience.',
+    features: [
       {
-        title: 'Standard Edit Tools',
-        description: 'Selection, drag-and-drop, and multi-track management basics.',
+        title: 'Timeline Loop Bug Fix',
+        description: 'Resolved inconsistencies in loop-back behavior and handle dragging sync.',
         status: 'released',
-        icon: Move,
+        icon: Zap,
       },
+    ],
+  },
+  {
+    phase: 'Phase 6',
+    title: 'Distribution',
+    status: 'released',
+    description: 'Making the project available to the global developer community.',
+    features: [
       {
-        title: 'Precision Snapping',
-        description: 'Grid and auxiliary line snapping for pixel-perfect alignment.',
+        title: 'NPM Publication',
+        description: 'Official release of @keplar-404/react-timeline-editor on the npm registry.',
+        status: 'released',
+        icon: Rocket,
+      },
+    ],
+  },
+  {
+    phase: 'Phase 5',
+    title: 'Enhanced UX Patterns',
+    status: 'released',
+    description: 'Further improvements to the editing workflow and visual feedback.',
+    features: [
+      {
+        title: 'Extended Feature Set',
+        description: 'Added various workflow enhancements and interaction polish.',
+        status: 'released',
+        icon: Layers,
+      },
+    ],
+  },
+  {
+    phase: 'Phase 4',
+    title: 'Workflow Improvements',
+    status: 'released',
+    description: 'Expanding the basic editing capabilities with user-requested features.',
+    features: [
+      {
+        title: 'Additional Features',
+        description: 'Implementation of several missing standard editing functions.',
+        status: 'released',
+        icon: Sliders,
+      },
+    ],
+  },
+  {
+    phase: 'Phase 3',
+    title: 'Quality Assurance',
+    status: 'released',
+    description: 'Cleaning up the codebase and squashing initial implementation bugs.',
+    features: [
+      {
+        title: 'Bug Fix Sweep',
+        description: 'Comprehensive fix for reported issues during early testing.',
         status: 'released',
         icon: Zap,
       },
@@ -32,53 +90,29 @@ const roadmapData: RoadmapPhase[] = [
   },
   {
     phase: 'Phase 2',
-    title: 'Advanced Editing Pack',
-    status: 'in-progress',
-    description: 'Expanding the creative toolkit with professional editing features.',
+    title: 'Feature Implementation',
+    status: 'released',
+    description: 'Building out the main interactive features of the timeline editor.',
     features: [
       {
-        title: 'Dynamic Cut / Blade Tool',
-        description: 'Advanced action splitting with real-time feedback and state management.',
+        title: 'Core Feature Expansion',
+        description: 'Adding multi-track support, action customization, and basic snapping.',
         status: 'released',
-        icon: Scissors,
-      },
-      {
-        title: 'Cross-Track Drag & Ghost Previews',
-        description: 'Seamless movement of blocks between different tracks with visual position hints.',
-        status: 'in-progress',
         icon: Layers,
-      },
-      {
-        title: 'Loop Zone Mocking',
-        description: 'Interactive loop region management with handles and sync controls.',
-        status: 'in-progress',
-        icon: Rocket,
       },
     ],
   },
   {
-    phase: 'Phase 3',
-    title: 'Visual Polish & UX',
-    status: 'planned',
-    description: 'Focusing on the user experience and visual feedback systems.',
+    phase: 'Phase 1',
+    title: 'The Foundation',
+    status: 'released',
+    description: 'Forked from the original unmaintained project to fix critical architecture issues and missing modern features.',
     features: [
       {
-        title: 'Undo/Redo History Engine',
-        description: 'Integrated state management for complex timeline operations.',
-        status: 'planned',
-        icon: Workflow,
-      },
-      {
-        title: 'Keyframe Animation Support',
-        description: 'Adding inner-block property animation and curve editing.',
-        status: 'planned',
-        icon: Sliders,
-      },
-      {
-        title: 'Advanced Theming System',
-        description: 'Complete CSS-variable based theming for all timeline elements.',
-        status: 'planned',
-        icon: Layout,
+        title: 'Project Fork & Audit',
+        description: 'Complete audit of the original codebase to identify performance bottlenecks.',
+        status: 'released',
+        icon: Move,
       },
     ],
   },
