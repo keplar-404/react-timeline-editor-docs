@@ -40,7 +40,7 @@ export default function HomePage() {
         </div>
 
         <h1 className="text-5xl font-bold tracking-tight text-fd-foreground leading-tight mb-3">
-          TMX
+          React Timeline Editor
           <span className="ml-4 inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold bg-fd-primary/10 text-fd-primary border border-fd-primary/20 align-middle">
             Alpha
           </span>

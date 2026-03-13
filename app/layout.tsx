@@ -7,8 +7,11 @@ const inter = Inter({
 });
 
 export const metadata = {
-  title: 'TMX - Professional React Timeline Editor',
+  title: 'React Timeline Editor - Professional Timeline Toolkit',
   description: 'A powerful, high-performance component library for building timeline animation and video editors in React.',
+  icons: {
+    icon: '/logo.svg',
+  },
 };
 
 export default function Layout({ children }: LayoutProps<'/'>) {
