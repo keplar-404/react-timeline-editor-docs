@@ -499,6 +499,11 @@ export function TransportBarPreview() {
   const [loopOn, setLoopOn] = useState(false);
   const [loopStart, setLoopStart] = useState(1);
   const [loopEnd, setLoopEnd] = useState(5);
+  const [scrollLeft, setScrollLeft] = useState(0);
+
+  const scale = 1;
+  const scaleWidth = 160;
+  const startLeft = 20;
 
   const player = useTimelinePlayer(timelineRef as React.RefObject<TimelineState>, {
     loop: { enabled: loopOn, start: loopStart, end: loopEnd },
@@ -524,12 +529,28 @@ export function TransportBarPreview() {
       <div style={{ flex: 1, overflow: "hidden", position: "relative" }}>
         <Timeline 
           ref={timelineRef} 
+          scale={scale}
+          scaleWidth={scaleWidth}
+          startLeft={startLeft}
           editorData={data} 
           effects={basicMockEffect} 
           autoScroll={true}
           onChange={(d) => setData(d as TimelineRow[])} 
+          onScroll={(p) => setScrollLeft(p.scrollLeft)}
           style={{ width: "100%", height: "100%" }} 
         />
+        {loopOn && (
+          <LoopZoneOverlay
+            scale={scale}
+            scaleWidth={scaleWidth}
+            startLeft={startLeft}
+            scrollLeft={scrollLeft}
+            loopStart={loopStart}
+            loopEnd={loopEnd}
+            onLoopStartChange={setLoopStart}
+            onLoopEndChange={setLoopEnd}
+          />
+        )}
       </div>
     </div>
   );
