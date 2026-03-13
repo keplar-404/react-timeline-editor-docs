@@ -33,19 +33,22 @@ export const EditorRowDrag = () => {
   const [data, setData] = useState(mockData);
 
   return (
-    <Timeline
-      editorData={data}
-      effects={{}}
-      onChange={setData}
-      enableRowDrag={true}
-      onRowDragStart={({ row }) => {
-        console.log('Started dragging row:', row.id);
-      }}
-      onRowDragEnd={({ row, editorData }) => {
-        // The engine provides the updated sorted array — just set it!
-        setData(editorData as TimelineRow[]);
-      }}
-    />
+    <div style={{ width: "100%", height: "400px" }}>
+      <Timeline
+        editorData={data}
+        effects={{}}
+        onChange={setData}
+        enableRowDrag={true}
+        onRowDragStart={({ row }) => {
+          console.log('Started dragging row:', row.id);
+        }}
+        onRowDragEnd={({ row, editorData }) => {
+          // The engine provides the updated sorted array — just set it!
+          setData(editorData as TimelineRow[]);
+        }}
+        style={{ width: "100%", height: "100%" }}
+      />
+    </div>
   );
 };
 ```
@@ -66,12 +69,15 @@ export const EditorCrossRowDrag = () => {
   const [data, setData] = useState(mockData);
 
   return (
-    <Timeline
-      editorData={data}
-      effects={{}}
-      onChange={setData}
-      enableCrossRowDrag={true}
-    />
+    <div style={{ width: "100%", height: "400px" }}>
+      <Timeline
+        editorData={data}
+        effects={{}}
+        onChange={setData}
+        enableCrossRowDrag={true}
+        style={{ width: "100%", height: "100%" }}
+      />
+    </div>
   );
 };
 ```
@@ -83,17 +89,20 @@ During the drag, a ghost preview follows the cursor. By default it's a blue glow
 Use `getGhostPreview` to render a fully custom ghost that matches your block's actual appearance:
 
 ```tsx
-<Timeline
-  editorData={data}
-  effects={{}}
-  onChange={setData}
-  enableCrossRowDrag={true}
-  getGhostPreview={({ action, row }) => (
-    <div className="custom-ghost-preview">
-      <span>Moving: {action.id}</span>
-    </div>
-  )}
-/>
+<div style={{ width: "100%", height: "400px" }}>
+  <Timeline
+    editorData={data}
+    effects={{}}
+    onChange={setData}
+    enableCrossRowDrag={true}
+    getGhostPreview={({ action, row }) => (
+      <div className="custom-ghost-preview">
+        <span>Moving: {action.id}</span>
+      </div>
+    )}
+    style={{ width: "100%", height: "100%" }}
+  />
+</div>
 ```
 
 ```css

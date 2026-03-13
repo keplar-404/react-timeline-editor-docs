@@ -50,12 +50,15 @@ export const EditorAuxiliarySnap = () => {
   const [data, setData] = useState(mockData);
 
   return (
-    <Timeline
-      editorData={data}
-      effects={mockEffect}
-      onChange={setData}
-      dragLine={true}
-    />
+    <div style={{ width: '100%', height: '400px' }}>
+      <Timeline
+        editorData={data}
+        effects={mockEffect}
+        onChange={setData}
+        dragLine={true}
+        style={{ width: "100%", height: "100%" }}
+      />
+    </div>
   );
 };
 ```
@@ -65,17 +68,20 @@ export const EditorAuxiliarySnap = () => {
 By default, all actions (except the one being dragged) are used as snap targets. Use `getAssistDragLineActionIds` to override which action IDs are used:
 
 ```tsx
-<Timeline
-  editorData={data}
-  effects={mockEffect}
-  dragLine={true}
-  getAssistDragLineActionIds={({ action, editorData, row }) => {
-    // Only snap to actions in the same row
-    return row.actions
-      .filter((a) => a.id !== action.id)
-      .map((a) => a.id);
-  }}
-/>
+<div style={{ width: '100%', height: '400px' }}>
+  <Timeline
+    editorData={data}
+    effects={mockEffect}
+    dragLine={true}
+    getAssistDragLineActionIds={({ action, editorData, row }) => {
+      // Only snap to actions in the same row
+      return row.actions
+        .filter((a) => a.id !== action.id)
+        .map((a) => a.id);
+    }}
+    style={{ width: "100%", height: "100%" }}
+  />
+</div>
 ```
 
 <Callout type="tip">

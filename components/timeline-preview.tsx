@@ -61,18 +61,14 @@ export function BasicTimelinePreview() {
   const [data, setData] = useState(basicMockData);
   return (
     <div
-      style={{
-        border: "1px solid #333",
-        borderRadius: "6px",
-        overflow: "hidden",
-        background: "#1a1a1a",
-      }}
+      className="timeline-preview-container"
     >
       <Timeline
         editorData={data}
         effects={basicMockEffect}
         onChange={(d) => setData(d as TimelineRow[])}
         autoScroll={true}
+        style={{ width: "100%", height: "100%" }}
       />
     </div>
   );
@@ -114,17 +110,13 @@ export function ActionConfigPreview() {
   const [data, setData] = useState(actionConfigData);
   return (
     <div
-      style={{
-        border: "1px solid #333",
-        borderRadius: "6px",
-        overflow: "hidden",
-        background: "#1a1a1a",
-      }}
+      className="timeline-preview-container"
     >
       <Timeline
         editorData={data}
         effects={basicMockEffect}
         onChange={(d) => setData(d as TimelineRow[])}
+        style={{ width: "100%", height: "100%" }}
       />
     </div>
   );
@@ -143,12 +135,7 @@ export function GridSnapPreview() {
   const [data, setData] = useState(snapMockData);
   return (
     <div
-      style={{
-        border: "1px solid #333",
-        borderRadius: "6px",
-        overflow: "hidden",
-        background: "#1a1a1a",
-      }}
+      className="timeline-preview-container"
     >
       <Timeline
         editorData={data}
@@ -156,6 +143,7 @@ export function GridSnapPreview() {
         onChange={(d) => setData(d as TimelineRow[])}
         gridSnap={true}
         scaleSplitCount={10}
+        style={{ width: "100%", height: "100%" }}
       />
     </div>
   );
@@ -178,18 +166,14 @@ export function AuxSnapPreview() {
   const [data, setData] = useState(auxSnapData);
   return (
     <div
-      style={{
-        border: "1px solid #333",
-        borderRadius: "6px",
-        overflow: "hidden",
-        background: "#1a1a1a",
-      }}
+      className="timeline-preview-container"
     >
       <Timeline
         editorData={data}
         effects={basicMockEffect}
         onChange={(d) => setData(d as TimelineRow[])}
         dragLine={true}
+        style={{ width: "100%", height: "100%" }}
       />
     </div>
   );
@@ -216,18 +200,13 @@ export function CustomStylePreview() {
   const [data, setData] = useState(customStyleData);
   return (
     <div
-      className="custom-style-preview-wrapper"
-      style={{
-        border: "1px solid #333",
-        borderRadius: "6px",
-        overflow: "hidden",
-        background: "#1a1a1a",
-      }}
+      className="custom-style-preview-wrapper timeline-preview-container"
     >
       <Timeline
         editorData={data}
         effects={customStyleEffect}
         onChange={(d) => setData(d as TimelineRow[])}
+        style={{ width: "100%", height: "100%" }}
         getActionRender={(action) => {
           if (action.effectId === "effect0") {
             return (
@@ -284,12 +263,7 @@ export function ScaleCustomizationPreview() {
 
   return (
     <div
-      style={{
-        border: "1px solid #333",
-        borderRadius: "6px",
-        overflow: "hidden",
-        background: "#1a1a1a",
-      }}
+      className="timeline-preview-container"
     >
       <div
         style={{
@@ -300,6 +274,7 @@ export function ScaleCustomizationPreview() {
           borderBottom: "1px solid #444",
           fontSize: "12px",
           color: "#ccc",
+          flexShrink: 0,
         }}
       >
         <label
@@ -329,12 +304,15 @@ export function ScaleCustomizationPreview() {
           />
         </label>
       </div>
-      <Timeline
-        scale={scale}
-        scaleWidth={scaleWidth}
-        editorData={scaleData}
-        effects={{}}
-      />
+      <div style={{ flex: 1, overflow: "hidden", position: "relative" }}>
+        <Timeline
+          scale={scale}
+          scaleWidth={scaleWidth}
+          editorData={scaleData}
+          effects={{}}
+          style={{ width: "100%", height: "100%" }}
+        />
+      </div>
     </div>
   );
 }
@@ -351,23 +329,21 @@ export function RowDragPreview() {
   const [data, setData] = useState(rowDragData);
   return (
     <div
-      style={{
-        border: "1px solid #333",
-        borderRadius: "6px",
-        overflow: "hidden",
-        background: "#1a1a1a",
-      }}
+      className="timeline-preview-container"
     >
-      <div style={{ padding: "8px 12px", background: "#2a2a2a", borderBottom: "1px solid #444", fontSize: "12px", color: "#aaa" }}>
+      <div style={{ padding: "8px 12px", background: "#2a2a2a", borderBottom: "1px solid #444", fontSize: "12px", color: "#aaa", flexShrink: 0 }}>
         💡 Drag the rows to reorder them
       </div>
-      <Timeline
-        editorData={data}
-        effects={customStyleEffect}
-        onChange={(d) => setData(d as TimelineRow[])}
-        enableRowDrag={true}
-        onRowDragEnd={({ editorData }) => setData(editorData as TimelineRow[])}
-      />
+      <div style={{ flex: 1, overflow: "hidden", position: "relative" }}>
+        <Timeline
+          editorData={data}
+          effects={customStyleEffect}
+          onChange={(d) => setData(d as TimelineRow[])}
+          enableRowDrag={true}
+          onRowDragEnd={({ editorData }) => setData(editorData as TimelineRow[])}
+          style={{ width: "100%", height: "100%" }}
+        />
+      </div>
     </div>
   );
 }
@@ -395,11 +371,12 @@ export function ScrollSyncPreview() {
     <div
       style={{
         display: "flex",
-        height: "220px",
         border: "1px solid #333",
         borderRadius: "6px",
         overflow: "hidden",
         background: "#1a1a1a",
+        width: "100%",
+        height: "400px",
       }}
     >
       <div
@@ -433,12 +410,13 @@ export function ScrollSyncPreview() {
           ))}
         </div>
       </div>
-      <div style={{ flex: 1, overflow: "hidden" }}>
+      <div style={{ flex: 1, overflow: "hidden", position: "relative" }}>
         <Timeline
           editorData={data}
           effects={basicMockEffect}
           onChange={(d) => setData(d as TimelineRow[])}
           onScroll={handleScroll}
+          style={{ width: "100%", height: "100%" }}
         />
       </div>
     </div>
@@ -476,14 +454,9 @@ export function CutBlockPreview() {
 
   return (
     <div
-      style={{
-        border: "1px solid #333",
-        borderRadius: "6px",
-        overflow: "hidden",
-        background: "#1a1a1a",
-      }}
+      className="timeline-preview-container"
     >
-      <div style={{ padding: "8px 12px", background: "#2a2a2a", borderBottom: "1px solid #444", display: "flex", gap: "10px", alignItems: "center" }}>
+      <div style={{ padding: "8px 12px", background: "#2a2a2a", borderBottom: "1px solid #444", display: "flex", gap: "10px", alignItems: "center", flexShrink: 0 }}>
         <button
           onClick={() => setIsCutMode(!isCutMode)}
           style={{
@@ -502,7 +475,7 @@ export function CutBlockPreview() {
           {isCutMode ? "Hover over actions and click to split them." : "Turn on blade mode to cut blocks."}
         </span>
       </div>
-      <div style={{ position: "relative" }}>
+      <div style={{ flex: 1, overflow: "hidden", position: "relative" }}>
         <Timeline
           editorData={data}
           effects={basicMockEffect}
@@ -512,6 +485,7 @@ export function CutBlockPreview() {
           startLeft={startLeft}
           rowHeight={rowHeight}
           disableDrag={isCutMode}
+          style={{ width: "100%", height: "100%" }}
         />
         <CutOverlay
           data={data}
@@ -546,14 +520,9 @@ export function TransportBarPreview() {
 
   return (
     <div
-      style={{
-        border: "1px solid #333",
-        borderRadius: "6px",
-        overflow: "hidden",
-        background: "#1a1a1a",
-      }}
+      className="timeline-preview-container"
     >
-      <div style={{ borderBottom: "1px solid #333" }}>
+      <div style={{ borderBottom: "1px solid #333", flexShrink: 0 }}>
         <TransportBar
           player={player}
           loop={{
@@ -566,7 +535,9 @@ export function TransportBarPreview() {
           }}
         />
       </div>
-      <Timeline ref={timelineRef} editorData={data} effects={{}} onChange={(d) => setData(d as TimelineRow[])} />
+      <div style={{ flex: 1, overflow: "hidden", position: "relative" }}>
+        <Timeline ref={timelineRef} editorData={data} effects={{}} onChange={(d) => setData(d as TimelineRow[])} style={{ width: "100%", height: "100%" }} />
+      </div>
     </div>
   );
 }
@@ -590,20 +561,15 @@ export function LoopZonePreview() {
 
   return (
     <div
-      style={{
-        border: "1px solid #333",
-        borderRadius: "6px",
-        overflow: "hidden",
-        background: "#1a1a1a",
-      }}
+      className="timeline-preview-container"
     >
-       <div style={{ padding: "8px 12px", background: "#2a2a2a", borderBottom: "1px solid #444", fontSize: "12px", color: "#aaa" }}>
+       <div style={{ padding: "8px 12px", background: "#2a2a2a", borderBottom: "1px solid #444", fontSize: "12px", color: "#aaa", flexShrink: 0 }}>
         <label style={{ display: "flex", gap: "8px", alignItems: "center", cursor: "pointer" }}>
           <input type="checkbox" checked={loopOn} onChange={(e) => setLoopOn(e.target.checked)} />
           Enable Loop Zone Overlay
         </label>
       </div>
-      <div style={{ position: "relative" }}>
+      <div style={{ flex: 1, overflow: "hidden", position: "relative" }}>
         <Timeline
           scale={scale}
           scaleWidth={scaleWidth}
@@ -612,6 +578,7 @@ export function LoopZonePreview() {
           effects={basicMockEffect}
           onChange={(d) => setData(d as TimelineRow[])}
           onScroll={(p) => setScrollLeft(p.scrollLeft)}
+          style={{ width: "100%", height: "100%" }}
         />
         {loopOn && (
           <LoopZoneOverlay
@@ -638,17 +605,13 @@ export function CrossRowDragPreview() {
   
   return (
     <div
-      style={{
-        border: "1px solid #333",
-        borderRadius: "6px",
-        overflow: "hidden",
-        background: "#1a1a1a",
-      }}
+      className="timeline-preview-container"
     >
-      <div style={{ padding: "8px 12px", background: "#2a2a2a", borderBottom: "1px solid #444", fontSize: "12px", color: "#aaa" }}>
+      <div style={{ padding: "8px 12px", background: "#2a2a2a", borderBottom: "1px solid #444", fontSize: "12px", color: "#aaa", flexShrink: 0 }}>
         💡 Drag action blocks between different tracks
       </div>
-      <Timeline
+      <div style={{ flex: 1, overflow: "hidden", position: "relative" }}>
+        <Timeline
         editorData={data}
         effects={customStyleEffect}
         onChange={(d) => setData(d as TimelineRow[])}
@@ -669,7 +632,9 @@ export function CrossRowDragPreview() {
              Moving: {action.id}
           </div>
         )}
+        style={{ width: "100%", height: "100%" }}
       />
+      </div>
     </div>
   );
 }
@@ -692,10 +657,13 @@ export function EventsPreview() {
         overflow: "hidden",
         background: "#1a1a1a",
         display: "flex",
-        flexDirection: "column"
+        flexDirection: "column",
+        width: "100%",
+        height: "400px",
       }}
     >
-      <Timeline
+      <div style={{ flex: 1, overflow: "hidden", position: "relative" }}>
+        <Timeline
         editorData={data}
         effects={basicMockEffect}
         onChange={(d) => setData(d as TimelineRow[])}
@@ -704,8 +672,10 @@ export function EventsPreview() {
         onClickTimeArea={(time) => { addLog(`Clicked time area at: ${time.toFixed(2)}s`); return true; }}
         onDoubleClickRow={(e, { row, time }) => addLog(`Double-clicked row: ${row.id} at ${time.toFixed(2)}s`)}
         onDoubleClickAction={(e, { action, time }) => addLog(`Double-clicked action: ${action.id} at ${time.toFixed(2)}s`)}
+        style={{ width: "100%", height: "100%" }}
       />
-      <div style={{ padding: "12px", background: "#111", borderTop: "1px solid #333" }}>
+      </div>
+      <div style={{ padding: "12px", background: "#111", borderTop: "1px solid #333", flexShrink: 0 }}>
         <h4 style={{ margin: "0 0 8px 0", fontSize: "12px", color: "#888", textTransform: "uppercase" }}>Event Log (Last 5)</h4>
         <div style={{ display: "flex", flexDirection: "column", gap: "4px", minHeight: "100px" }}>
           {logs.length === 0 ? <div style={{ fontSize: "13px", color: "#555" }}>Click around the timeline to see events...</div> : null}

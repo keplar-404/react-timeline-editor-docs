@@ -1,4 +1,20 @@
 @import 'tailwindcss';
 @import 'fumadocs-ui/css/neutral.css';
 @import 'fumadocs-ui/css/preset.css';
-@import '@keplar-404/react-timeline-editor/dist/react-timeline-editor.css'
+@import '@keplar-404/react-timeline-editor/dist/react-timeline-editor.css';
+
+.timeline-preview-container {
+  border: 1px solid #333;
+  border-radius: 6px;
+  overflow: hidden;
+  background: #1a1a1a;
+  width: 100%;
+  height: 400px;
+  display: flex;
+  flex-direction: column;
+}
+@media (max-width: 768px) {
+  .timeline-preview-container {
+    height: 300px;
+  }
+}

@@ -27,12 +27,13 @@ export const EditorLoopZone = () => {
   const startLeft = 20;
 
   return (
-    <div style={{ position: "relative" }}>
+    <div style={{ position: "relative", width: "100%", height: "400px" }}>
       <Timeline
         scale={scale}
         scaleWidth={scaleWidth}
         startLeft={startLeft}
         onScroll={(p) => setScrollLeft(p.scrollLeft)}
+        style={{ width: "100%", height: "100%" }}
       />
 
       {loopOn && (

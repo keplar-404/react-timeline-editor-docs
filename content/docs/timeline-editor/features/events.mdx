@@ -82,15 +82,25 @@ export const EditorEventHandling = () => {
 
   return (
     <div className="timeline-container">
-      <Timeline
-        editorData={data}
-        effects={mockEffect}
-        onChange={setData}
-        onDoubleClickRow={handleDoubleClickRow}
-        onClickAction={(e, { action, row, time }) => {
-          console.log(`Clicked action: ${action.id} at time ${time}`);
-        }}
-      />
+      <div style={{ flex: 1, position: "relative" }}>
+        <Timeline
+          editorData={data}
+          effects={mockEffect}
+          onChange={setData}
+          onDoubleClickRow={handleDoubleClickRow}
+          style={{ width: "100%", height: "100%" }}
+          onClickAction={(e, { action, row, time }) => {
+            console.log(`Clicked action: ${action.id} at time ${time}`);
+          }}
+        />
+      </div>
+
+      <style>{`
+        .timeline-container { width: 100%; height: 400px; display: flex; flex-direction: column; border: 1px solid #333; }
+        @media (max-width: 768px) {
+          .timeline-container { height: 300px; }
+        }
+      `}</style>
     </div>
   );
 };

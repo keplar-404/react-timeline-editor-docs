@@ -22,18 +22,18 @@ The `CutOverlay` provides a visual "blade" that lets users split action blocks a
 ## Basic Usage
 
 ```tsx
-import React, { useState } from 'react';
+import React, { useState } from "react";
 import {
   Timeline,
   TimelineRow,
   CutOverlay,
   splitActionInRow,
-} from '@keplar-404/react-timeline-editor';
+} from "@keplar-404/react-timeline-editor";
 
 const mockData: TimelineRow[] = [
   {
-    id: '0',
-    actions: [{ id: 'action00', start: 0, end: 10, effectId: 'effect0' }],
+    id: "0",
+    actions: [{ id: "action00", start: 0, end: 10, effectId: "effect0" }],
   },
 ];
 
@@ -56,12 +56,15 @@ export const EditorCutBlock = () => {
   };
 
   return (
-    <div style={{ position: 'relative' }}>
-      <button onClick={() => setIsCutMode(!isCutMode)}>
-        {isCutMode ? 'Disable Cut Blade' : 'Enable Cut Blade (Hold C)'}
-      </button>
+    <div style={{ position: "relative", width: "100%", height: "400px", display: "flex", flexDirection: "column" }}>
+      <div style={{ flexShrink: 0, paddingBottom: "8px" }}>
+        <button className="bg-blue-600 text-white px-4 py-2 rounded" onClick={() => setIsCutMode(!isCutMode)}>
+          {isCutMode ? "Disable Cut Blade" : "Enable Cut Blade (Hold C)"}
+        </button>
+      </div>
 
-      <Timeline
+      <div style={{ flex: 1, position: "relative" }}>
+        <Timeline
         editorData={data}
         effects={{}}
         onChange={setData}
@@ -69,7 +72,8 @@ export const EditorCutBlock = () => {
         scaleWidth={scaleWidth}
         startLeft={startLeft}
         rowHeight={rowHeight}
-        disableDrag={isCutMode}  // Disable regular dragging while in cut mode
+        disableDrag={isCutMode} // Disable regular dragging while in cut mode
+        style={{ width: "100%", height: "100%" }}
       />
 
       <CutOverlay
@@ -81,10 +85,11 @@ export const EditorCutBlock = () => {
         rowHeight={rowHeight}
         editAreaTopOffset={editAreaTopOffset}
         gridSnap={false}
-        config={{ keyboardModifier: 'c' }}  // Activate with 'C' key
+        config={{ keyboardModifier: "c" }} // Activate with 'C' key
         onModifierChange={setIsCutMode}
         onCut={handleCut}
       />
+      </div>
     </div>
   );
 };
@@ -121,13 +126,13 @@ Customize the blade's appearance via the `config` prop:
 ## `splitActionInRow` Utility
 
 ```typescript
-import { splitActionInRow } from '@keplar-404/react-timeline-editor';
+import { splitActionInRow } from "@keplar-404/react-timeline-editor";
 
 const newData = splitActionInRow(
-  data,       // Current TimelineRow[]
-  'row-1',    // Row ID
-  'action-1', // Action ID to split
-  5,          // Cut time in seconds
+  data, // Current TimelineRow[]
+  "row-1", // Row ID
+  "action-1", // Action ID to split
+  5, // Cut time in seconds
 );
 
 // Result: the action [0, 10] becomes two: [0, 5] and [5, 10]
