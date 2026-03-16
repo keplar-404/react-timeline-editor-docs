@@ -8,39 +8,40 @@ description: Complete API reference for the CutOverlay component and splitAction
 `CutOverlay` provides a visual "blade" that lets users split action blocks at a time precise position.
 
 Requirements:
+
 1. Mounted as a **sibling** to `<Timeline>` inside a `position: relative` wrapper
 2. Given the **same geometry props** as `<Timeline>`
 
 ## `<CutOverlay />` Props
 
-| Prop | Type | Required | Default | Description |
-|:---|:---|:---|:---|:---|
-| `data` | `TimelineRow[]` | ✅ | — | Current timeline data |
-| `scale` | `number` | ✅ | — | Must match `<Timeline>` `scale` |
-| `scaleWidth` | `number` | ✅ | — | Must match `<Timeline>` `scaleWidth` |
-| `scaleSplitCount` | `number` | ✅ | — | Must match `<Timeline>` `scaleSplitCount` |
-| `startLeft` | `number` | ✅ | — | Must match `<Timeline>` `startLeft` |
-| `rowHeight` | `number` | ✅ | — | Must match `<Timeline>` `rowHeight` |
-| `editAreaTopOffset` | `number` | ✅ | — | Height of the time ruler (usually `32`) |
-| `gridSnap` | `boolean` | — | `false` | Snap blade to grid intervals |
-| `config` | `CutOverlayConfig` | — | `{}` | Visual and behavior config |
-| `onModifierChange` | `(isActive: boolean) => void` | — | — | Called when keyboard modifier toggles |
-| `onCut` | `(rowId: string, actionId: string, cutTime: number) => void` | ✅ | — | Called when user clicks to cut |
+| Prop                | Type                                                         | Required | Default | Description                                                                                                                                                                                                                                                            |
+| :------------------ | :----------------------------------------------------------- | :------- | :------ | :--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `data`              | `TimelineRow[]`                                              | ✅       | —       | Current timeline data                                                                                                                                                                                                                                                  |
+| `scale`             | `number`                                                     | ✅       | `1`     | Duration represented by one scale unit (seconds). Must match the `scale` prop on `<Timeline>`.                                                                                                                                                                         |
+| `scaleWidth`        | `number`                                                     | ✅       | `160`   | Width in pixels of one scale unit. Must match `<Timeline>` `scaleWidth`.                                                                                                                                                                                               |
+| `scaleSplitCount`   | `number`                                                     | ✅       | `10`    | Number of sub-divisions per scale unit used for grid snapping. Must match `<Timeline>` `scaleSplitCount`.                                                                                                                                                              |
+| `startLeft`         | `number`                                                     | ✅       | `20`    | Left inset in pixels before the first scale mark begins. Must match `<Timeline>` `startLeft`.                                                                                                                                                                          |
+| `rowHeight`         | `number`                                                     | ✅       | `32`    | Height in pixels of each row in the edit area. Must match `<Timeline>` `rowHeight`.                                                                                                                                                                                    |
+| `editAreaTopOffset` | `number`                                                     | ✅       | `32`    | Height in pixels of the time-ruler strip that sits above the edit rows. This is subtracted from the mouse Y coordinate to find the correct row index.                                                                                                                  |
+| `gridSnap`          | `boolean`                                                    | —        | `false` | When `true` (and `<Timeline gridSnap>` is also enabled), the cut point snaps to the nearest grid boundary as the cursor moves.                                                                                                                                         |
+| `config`            | `CutOverlayConfig`                                           | —        | `{}`    | Fine-grained control over the blade, pill, and block-highlight visuals. All properties are optional and fall back to red-themed defaults.                                                                                                                              |
+| `onModifierChange`  | `(isActive: boolean) => void`                                | —        | —       | Called whenever the keyboard modifier state changes. Fires with `true` when the modifier is pressed (blade active) and `false` when released (blade inactive, pointer events pass through). Use this to dynamically control `disableDrag` on the sibling `<Timeline>`. |
+| `onCut`             | `(rowId: string, actionId: string, cutTime: number) => void` | ✅       | —       | Called when the user clicks while the blade is positioned over an action block. Provides the `rowId`, `actionId`, and the exact `cutTime` in seconds.                                                                                                                  |
 
 ## `CutOverlayConfig`
 
-| Option | Type | Default | Description |
-|:---|:---|:---|:---|
-| `bladeColor` | `string` | `'#3b82f6'` | Color of the blade line |
-| `showPill` | `boolean` | `true` | Show floating time label pill |
-| `formatPillLabel` | `(time: number) => string` | `"${time.toFixed(2)}s"` | Custom label formatter |
-| `pillColor` | `string` | `'#1e3a8a'` | Label background color |
-| `pillTextColor` | `string` | `'#ffffff'` | Label text color |
-| `showBlockHighlight` | `boolean` | `true` | Highlight the hovered action block |
-| `blockHighlightColor` | `string` | `'rgba(59,130,246,0.15)'` | Block highlight fill |
-| `blockHighlightBorderColor` | `string` | `'rgba(59,130,246,0.4)'` | Block highlight border |
-| `cursor` | `string` | `'crosshair'` | CSS cursor style |
-| `keyboardModifier` | `string` | `--` | Key to hold to activate cut mode (e.g. `'c'`, `'Shift'`) |
+| Option                      | Type                                                | Default                          | Description                                                                                                                                                   |
+| :-------------------------- | :-------------------------------------------------- | :------------------------------- | :------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `bladeColor`                | `string`                                            | `'#ef4444'`                      | CSS color of the vertical blade line.                                                                                                                         |
+| `showPill`                  | `boolean`                                           | `true`                           | Whether to display the floating time-label pill above the blade. Set to `false` to completely hide the pill.                                                  |
+| `formatPillLabel`           | `(time: number) => string`                          | ``(t) => `✂ ${t.toFixed(2)}s` `` | Custom formatter for the time label displayed inside the pill. Receives the cut time in **seconds** and should return a string.                               |
+| `pillColor`                 | `string`                                            | `'#ef4444'`                      | Background color of the pill label.                                                                                                                           |
+| `pillTextColor`             | `string`                                            | `'#ffffff'`                      | Text color of the pill label.                                                                                                                                 |
+| `showBlockHighlight`        | `boolean`                                           | `true`                           | Whether to show the translucent highlight on the hovered action block. Set to `false` to remove all background and border from the clip container.            |
+| `blockHighlightColor`       | `string`                                            | `'rgba(239,68,68,0.08)'`         | Background fill color for the block highlight. Accepts any valid CSS color value. Only takes effect when `showBlockHighlight` is `true`.                      |
+| `blockHighlightBorderColor` | `string`                                            | `'rgba(239,68,68,0.3)'`          | Border color for the block highlight container. Only takes effect when `showBlockHighlight` is `true`.                                                        |
+| `cursor`                    | `string`                                            | `'col-resize'`                   | Custom CSS cursor to display when hovering over the active cut overlay. Standard CSS cursors like 'crosshair', 'copy', or 'default' are supported.            |
+| `keyboardModifier`          | `'Alt' \| 'Control' \| 'Shift' \| 'Meta' \| string` | `--`                             | A specific keyboard key that must be held down to activate the cut blade. Supports standard modifier keys or exact literal character keys (e.g., 'c' or 'x'). |
 
 ---
 
@@ -54,21 +55,22 @@ function splitActionInRow(
   rowId: string,
   actionId: string,
   cutTime: number,
-): TimelineRow[]
+): TimelineRow[];
 ```
 
 ### Parameters
 
-| Parameter | Type | Description |
-|:---|:---|:---|
-| `data` | `TimelineRow[]` | Current timeline data array |
-| `rowId` | `string` | ID of the row containing the action |
-| `actionId` | `string` | ID of the action to split |
-| `cutTime` | `number` | Time in seconds at which to cut |
+| Parameter  | Type            | Description                         |
+| :--------- | :-------------- | :---------------------------------- |
+| `data`     | `TimelineRow[]` | Current timeline data array         |
+| `rowId`    | `string`        | ID of the row containing the action |
+| `actionId` | `string`        | ID of the action to split           |
+| `cutTime`  | `number`        | Time in seconds at which to cut     |
 
 ### Return Value
 
 A new `TimelineRow[]` array with the target action replaced by two new actions:
+
 - First: `[original.start, cutTime)`
 - Second: `[cutTime, original.end)`
 
@@ -77,16 +79,16 @@ Both inherit the same `effectId` and `data` from the original.
 ### Example
 
 ```typescript
-import { splitActionInRow } from '@keplar-404/react-timeline-editor';
+import { splitActionInRow } from "@keplar-404/react-timeline-editor";
 
 const data: TimelineRow[] = [
   {
-    id: 'row-1',
-    actions: [{ id: 'action-1', start: 0, end: 10, effectId: 'effect0' }],
+    id: "row-1",
+    actions: [{ id: "action-1", start: 0, end: 10, effectId: "effect0" }],
   },
 ];
 
-const newData = splitActionInRow(data, 'row-1', 'action-1', 5);
+const newData = splitActionInRow(data, "row-1", "action-1", 5);
 // Result: two actions → [0, 5] and [5, 10]
 // The original 'action-1' is replaced by two new actions with unique IDs
 ```

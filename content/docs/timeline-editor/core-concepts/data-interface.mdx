@@ -60,14 +60,15 @@ export interface TimelineAction {
 <Callout type="tip">
   You can extend `TimelineAction` with your own TypeScript interface to add typed custom data:
 
-  ```typescript
-  export interface MyAudioAction extends TimelineAction {
-    data: {
-      src: string;
-      volume: number;
-    };
-  }
-  ```
+```typescript
+export interface MyAudioAction extends TimelineAction {
+  data: {
+    src: string;
+    volume: number;
+  };
+}
+```
+
 </Callout>
 
 ## TimelineEffect
@@ -106,25 +107,25 @@ export interface TimeLineEffectSource {
 
 ### Engine Callback Lifecycle
 
-| Callback | Fires when... | Typical use |
-|---|---|---|
-| `start` | Playback begins while cursor is **already within** the action range | Resume audio at correct offset |
-| `enter` | Playhead **crosses into** the action from outside | Start sound / show animation |
-| `update` | Every tick **while inside** the action | Advance animation frame |
-| `leave` | Playhead **crosses out** of the action | Stop audio / hide animation |
-| `stop` | Playback is **paused** inside the action | Pause audio |
+| Callback | Fires when...                                                       | Typical use                    |
+| -------- | ------------------------------------------------------------------- | ------------------------------ |
+| `start`  | Playback begins while cursor is **already within** the action range | Resume audio at correct offset |
+| `enter`  | Playhead **crosses into** the action from outside                   | Start sound / show animation   |
+| `update` | Every tick **while inside** the action                              | Advance animation frame        |
+| `leave`  | Playhead **crosses out** of the action                              | Stop audio / hide animation    |
+| `stop`   | Playback is **paused** inside the action                            | Pause audio                    |
 
 ## A Full Example Setup
 
 ```typescript
-import { TimelineRow, TimelineEffect } from '@keplar-404/react-timeline-editor';
-import { TimelineEngine } from '@keplar-404/timeline-engine';
+import { TimelineRow, TimelineEffect } from "@keplar-404/react-timeline-editor";
+import { TimelineEngine } from "@keplar-404/timeline-engine";
 
 // ── Effect definitions ──────────────────────────────────────────────────────
 const mockEffect: Record<string, TimelineEffect> = {
   audio: {
-    id: 'audio',
-    name: 'Play Audio',
+    id: "audio",
+    name: "Play Audio",
     source: {
       enter: ({ action, time }) => {
         console.log(`Playing audio for action ${action.id} at t=${time}`);
@@ -135,33 +136,33 @@ const mockEffect: Record<string, TimelineEffect> = {
     },
   },
   video: {
-    id: 'video',
-    name: 'Play Video',
+    id: "video",
+    name: "Play Video",
   },
 };
 
 // ── Timeline data ──────────────────────────────────────────────────────────
 const editorData: TimelineRow[] = [
   {
-    id: 'audio-track',
+    id: "audio-track",
     actions: [
       {
-        id: 'audio-clip-1',
+        id: "audio-clip-1",
         start: 0,
         end: 10,
-        effectId: 'audio',
-        data: { src: '/audio/bg.mp3', name: 'Background Music' },
+        effectId: "audio",
+        data: { src: "/audio/bg.mp3", name: "Background Music" },
       },
     ],
   },
   {
-    id: 'video-track',
+    id: "video-track",
     actions: [
       {
-        id: 'video-clip-1',
+        id: "video-clip-1",
         start: 2,
         end: 8,
-        effectId: 'video',
+        effectId: "video",
         movable: true,
         flexible: true,
         minStart: 0,

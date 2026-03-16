@@ -39,16 +39,20 @@ The `<Timeline />` exposes a rich set of event callbacks for actions, rows, and 
 A common pattern is to listen for `onDoubleClickRow` to insert new action blocks:
 
 ```tsx
-import { Timeline, TimelineRow, TimelineEffect } from '@keplar-404/react-timeline-editor';
-import React, { useState } from 'react';
+import {
+  Timeline,
+  TimelineRow,
+  TimelineEffect,
+} from "@keplar-404/react-timeline-editor";
+import React, { useState } from "react";
 
 const mockData: TimelineRow[] = [
-  { id: 'row-1', actions: [] },
-  { id: 'row-2', actions: [] },
+  { id: "row-1", actions: [] },
+  { id: "row-2", actions: [] },
 ];
 
 const mockEffect: Record<string, TimelineEffect> = {
-  effect0: { id: 'effect0', name: 'Added Effect' },
+  effect0: { id: "effect0", name: "Added Effect" },
 };
 
 export const EditorEventHandling = () => {
@@ -57,11 +61,11 @@ export const EditorEventHandling = () => {
 
   const handleDoubleClickRow = (
     e: React.MouseEvent,
-    { row, time }: { row: TimelineRow; time: number }
+    { row, time }: { row: TimelineRow; time: number },
   ) => {
     // Prevent adding if we clicked directly on an existing action
     const target = e.target as HTMLElement;
-    if (target.className.includes('timeline-editor-action')) return;
+    if (target.className.includes("timeline-editor-action")) return;
 
     setData((prev) => {
       const nextData = structuredClone(prev);
@@ -72,8 +76,8 @@ export const EditorEventHandling = () => {
         targetRow.actions.push({
           id: `new-action-${actionCounter}`,
           start: time,
-          end: time + 2,  // default 2 second block
-          effectId: 'effect0',
+          end: time + 2, // default 2 second block
+          effectId: "effect0",
         });
       }
       return nextData;
@@ -126,19 +130,19 @@ export const EditorEventHandling = () => {
 
 ## All Event Callbacks
 
-| Callback | Signature | Description |
-|:---|:---|:---|
-| `onClickRow` | `(e, { row, time }) => void` | Row single-click |
-| `onClickAction` | `(e, { action, row, time }) => void` | Action single-click |
-| `onClickActionOnly` | `(e, { action, row, time }) => void` | Action click — **not** fired when drag triggered |
-| `onDoubleClickRow` | `(e, { row, time }) => void` | Row double-click |
-| `onDoubleClickAction` | `(e, { action, row, time }) => void` | Action double-click |
-| `onContextMenuRow` | `(e, { row, time }) => void` | Row right-click |
-| `onContextMenuAction` | `(e, { action, row, time }) => void` | Action right-click |
-| `onClickTimeArea` | `(time, e) => boolean` | Time ruler click — return `false` to block cursor |
+| Callback              | Signature                            | Description                                       |
+| :-------------------- | :----------------------------------- | :------------------------------------------------ |
+| `onClickRow`          | `(e, { row, time }) => void`         | Row single-click                                  |
+| `onClickAction`       | `(e, { action, row, time }) => void` | Action single-click                               |
+| `onClickActionOnly`   | `(e, { action, row, time }) => void` | Action click — **not** fired when drag triggered  |
+| `onDoubleClickRow`    | `(e, { row, time }) => void`         | Row double-click                                  |
+| `onDoubleClickAction` | `(e, { action, row, time }) => void` | Action double-click                               |
+| `onContextMenuRow`    | `(e, { row, time }) => void`         | Row right-click                                   |
+| `onContextMenuAction` | `(e, { action, row, time }) => void` | Action right-click                                |
+| `onClickTimeArea`     | `(time, e) => boolean`               | Time ruler click — return `false` to block cursor |
 
 <Callout type="info">
-  The `time` parameter passed to all callbacks is the **timeline time in seconds** at the
-  click position — not pixel coordinates. This is calculated from the cursor position and
-  the current scale/offset settings.
+  The `time` parameter passed to all callbacks is the **timeline time in
+  seconds** at the click position — not pixel coordinates. This is calculated
+  from the cursor position and the current scale/offset settings.
 </Callout>

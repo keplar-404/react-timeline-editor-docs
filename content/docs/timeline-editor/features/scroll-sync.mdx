@@ -17,8 +17,12 @@ The panel on the left stays in sync with the timeline's vertical scroll — the 
 ## Implementation
 
 ```tsx
-import { Timeline, TimelineRow, TimelineEffect } from '@keplar-404/react-timeline-editor';
-import React, { useState, useRef } from 'react';
+import {
+  Timeline,
+  TimelineRow,
+  TimelineEffect,
+} from "@keplar-404/react-timeline-editor";
+import React, { useState, useRef } from "react";
 
 const mockData: TimelineRow[] = Array.from({ length: 20 }).map((_, i) => ({
   id: `track-${i + 1}`,
@@ -99,18 +103,19 @@ export const EditorScrollSync = () => {
 ```
 
 <Callout type="info">
-  **Critical alignment tip:** The `.track-headers-spacer` must have a `margin-top` equal to the
-  height of the Timeline's time ruler header (default: `32px`). Similarly, each `.track-header-item`
-  height must equal the `rowHeight` prop (default: `32px`). If these don't match, the scroll sync
-  will be off.
+  **Critical alignment tip:** The `.track-headers-spacer` must have a
+  `margin-top` equal to the height of the Timeline's time ruler header (default:
+  `32px`). Similarly, each `.track-header-item` height must equal the
+  `rowHeight` prop (default: `32px`). If these don't match, the scroll sync will
+  be off.
 </Callout>
 
 ## `OnScrollParams` Type
 
 ```typescript
 interface OnScrollParams {
-  scrollTop: number;    // Vertical scroll offset from top
-  scrollLeft: number;   // Horizontal scroll offset from left
+  scrollTop: number; // Vertical scroll offset from top
+  scrollLeft: number; // Horizontal scroll offset from left
   scrollHeight: number; // Total scrollable height
   clientHeight: number; // Visible height
 }

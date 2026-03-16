@@ -13,32 +13,47 @@ description: Complete API reference for the LoopZoneOverlay component.
 
 ## Props Reference
 
-| Prop | Type | Required | Default | Description |
-|:---|:---|:---|:---|:---|
-| `scale` | `number` | ✅ | — | Must match `<Timeline>` `scale` prop |
-| `scaleWidth` | `number` | ✅ | — | Must match `<Timeline>` `scaleWidth` prop |
-| `startLeft` | `number` | ✅ | — | Must match `<Timeline>` `startLeft` prop |
-| `scrollLeft` | `number` | ✅ | — | Current horizontal scroll offset |
-| `loopStart` | `number` | ✅ | — | Loop region start time in seconds |
-| `loopEnd` | `number` | ✅ | — | Loop region end time in seconds |
-| `onLoopStartChange` | `(time: number) => void` | ✅ | — | Called when user drags the start handle |
-| `onLoopEndChange` | `(time: number) => void` | ✅ | — | Called when user drags the end handle |
-| `config` | `LoopZoneConfig` | — | `{}` | Visual configuration |
-| `renderHandle` | `(side: 'start' \| 'end') => ReactNode` | — | — | Custom drag handle renderer |
+| Prop                | Type                                          | Required | Default | Description                                                                                                                   |
+| :------------------ | :-------------------------------------------- | :------- | :------ | :---------------------------------------------------------------------------------------------------------------------------- |
+| `scale`             | `number`                                      | ✅       | `1`     | Duration represented by one scale unit (seconds). Must match `<Timeline>` `scale` prop                                        |
+| `scaleWidth`        | `number`                                      | ✅       | `160`   | Width in pixels of one scale unit. Must match `<Timeline>` `scaleWidth` prop                                                  |
+| `startLeft`         | `number`                                      | ✅       | `20`    | Left inset in pixels before the first scale mark begins. Must match `<Timeline>` `startLeft` prop                             |
+| `scrollLeft`        | `number`                                      | ✅       | —       | Current horizontal scroll offset of the timeline. Track this via the `onScroll` callback on `<Timeline>`                      |
+| `loopStart`         | `number`                                      | ✅       | —       | Loop region start time in seconds. This is a **controlled** prop — manage it in parent state.                                 |
+| `loopEnd`           | `number`                                      | ✅       | —       | Loop region end time in seconds. Must be greater than `loopStart`. This is a **controlled** prop — manage it in parent state. |
+| `onLoopStartChange` | `(time: number) => void`                      | ✅       | —       | Called when the user drags the start handle to a new time value. Update your `loopStart` state here.                          |
+| `onLoopEndChange`   | `(time: number) => void`                      | ✅       | —       | Called when the user drags the end handle to a new time value. Update your `loopEnd` state here.                              |
+| `config`            | `LoopZoneConfig`                              | —        | `{}`    | Fine-grained control over the band color, opacity, handle color, and boundary line appearance.                                |
+| `renderHandle`      | `(props: LoopHandleRenderProps) => ReactNode` | —        | —       | Custom render function for the drag handles. Replaces the default SVG grip pill.                                              |
+| `className`         | `string`                                      | —        | —       | Additional CSS class name appended to the overlay root element.                                                               |
+| `style`             | `React.CSSProperties`                         | —        | —       | Inline styles applied to the overlay root element.                                                                            |
 
 ## `LoopZoneConfig`
 
-| Option | Type | Default | Description |
-|:---|:---|:---|:---|
-| `bandColor` | `string` | `'#3b82f6'` | CSS color for the loop region highlight |
-| `bandOpacity` | `number` | `0.1` | Opacity of the highlight (0–1) |
-| `showBoundaryLines` | `boolean` | `true` | Show dashed vertical lines at loop edges |
+| Option              | Type      | Default                     | Description                                                                                                                             |
+| :------------------ | :-------- | :-------------------------- | :-------------------------------------------------------------------------------------------------------------------------------------- |
+| `bandColor`         | `string`  | `'#10b981'`                 | CSS color of the loop region shaded band.                                                                                               |
+| `bandOpacity`       | `number`  | `0.07`                      | Opacity of the loop region band (0–1). Keep this low (< 0.15) so underlying blocks remain visible.                                      |
+| `bandBorderColor`   | `string`  | —                           | Border/stripe color used on the band's edges and stripe pattern. Falls back to `bandColor` when not set.                                |
+| `handleColor`       | `string`  | —                           | CSS color of the default drag handle grip pills. Falls back to `bandColor` when not set. Has no effect when `renderHandle` is provided. |
+| `showBoundaryLines` | `boolean` | `true`                      | Whether to render the dashed vertical boundary lines extending through the edit rows below the time ruler.                              |
+| `boundaryLineColor` | `string`  | `'rgba(16, 185, 129, 0.4)'` | CSS color of the dashed boundary lines.                                                                                                 |
+
+## `LoopHandleRenderProps`
+
+When you provide `renderHandle`, your function receives these props:
+
+| Property      | Type                            | Description                                                                                                                                                   |
+| :------------ | :------------------------------ | :------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `type`        | `'start' \| 'end'`              | Which boundary this handle controls. Use to differentiate styling between the two handles.                                                                    |
+| `time`        | `number`                        | The current time value (in seconds) for this boundary. Useful for displaying a tooltip or label.                                                              |
+| `onMouseDown` | `(e: React.MouseEvent) => void` | Attach this to your draggable element's `onMouseDown` to activate dragging. The overlay provides all pixel math and handles document mouse events internally. |
 
 ## Usage Example
 
 ```tsx
-import React, { useState } from 'react';
-import { Timeline, LoopZoneOverlay } from '@keplar-404/react-timeline-editor';
+import React, { useState } from "react";
+import { Timeline, LoopZoneOverlay } from "@keplar-404/react-timeline-editor";
 
 export const App = () => {
   const [loopStart, setLoopStart] = useState(2);
@@ -50,7 +65,7 @@ export const App = () => {
   const startLeft = 20;
 
   return (
-    <div style={{ position: 'relative' }}>
+    <div style={{ position: "relative" }}>
       <Timeline
         scale={scale}
         scaleWidth={scaleWidth}
@@ -70,7 +85,7 @@ export const App = () => {
         onLoopStartChange={setLoopStart}
         onLoopEndChange={setLoopEnd}
         config={{
-          bandColor: '#10b981',
+          bandColor: "#10b981",
           bandOpacity: 0.12,
           showBoundaryLines: true,
         }}
@@ -85,9 +100,14 @@ export const App = () => {
 ```tsx
 <LoopZoneOverlay
   {/* ...other props... */}
-  renderHandle={(side) => (
-    <div className={`handle handle-${side}`}>
-      {side === 'start' ? '⟨' : '⟩'}
+  renderHandle={({ type, time, onMouseDown }) => (
+    <div
+      className={`handle handle-${type}`}
+      onMouseDown={onMouseDown}
+      style={{ cursor: 'ew-resize', background: 'purple' }}
+      title={`${type === 'start' ? 'Loop start' : 'Loop end'}: ${time.toFixed(2)}s`}
+    >
+      {type === 'start' ? '⟨' : '⟩'}
     </div>
   )}
 />

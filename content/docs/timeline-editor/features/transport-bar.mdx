@@ -15,21 +15,21 @@ The `TransportBar` is a pre-built playback control UI designed to work seamlessl
 ## What It Includes
 
 - **Transport controls**: Return to start, Rewind, Play/Pause, Forward, Stop
-- **Time display**: Formatted `M:SS.cs` readout
-- **Playback rate**: Speed selector (0.25x, 0.5x, 1x, 2x, 4x)
+- **Time display**: Formatted `M:SS.cs` readout (customizable via `formatDisplayTime`)
+- **Playback rate**: Speed selector (0.25x, 0.5x, 1x, 2x, 4x - customizable via `playRates`)
 - **Loop controls**: Toggle and input fields for loop region
 
 ## Basic Usage
 
 ```tsx
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef } from "react";
 import {
   Timeline,
   TimelineState,
   TransportBar,
   LoopZoneOverlay,
   useTimelinePlayer,
-} from '@keplar-404/react-timeline-editor';
+} from "@keplar-404/react-timeline-editor";
 
 export const EditorWithTransport = () => {
   const timelineRef = useRef<TimelineState>(null);
@@ -56,11 +56,7 @@ export const EditorWithTransport = () => {
           onScroll={(p) => setScrollLeft(p.scrollLeft)}
           style={{ width: "100%", height: "100%" }}
         />
-        <LoopZoneOverlay
-          scrollLeft={scrollLeft}
-          loopStart={1}
-          loopEnd={5}
-        />
+        <LoopZoneOverlay scrollLeft={scrollLeft} loopStart={1} loopEnd={5} />
       </div>
 
       <style>{`
@@ -87,7 +83,10 @@ Integrate a loop region by passing the `loop` configuration:
 export const EditorWithLoopTransport = () => {
   const timelineRef = useRef<TimelineState>(null);
   const [data, setData] = useState([
-    { id: "Track 1", actions: [{ id: "A", start: 0, end: 10, effectId: "effect0" }] }
+    {
+      id: "Track 1",
+      actions: [{ id: "A", start: 0, end: 10, effectId: "effect0" }],
+    },
   ]);
   const [loopOn, setLoopOn] = useState(false);
   const [loopStart, setLoopStart] = useState(1);
@@ -114,13 +113,13 @@ export const EditorWithLoopTransport = () => {
         />
       </div>
       <div style={{ flex: 1, position: "relative" }}>
-        <Timeline 
-          ref={timelineRef} 
-          editorData={data} 
-          effects={{}} 
+        <Timeline
+          ref={timelineRef}
+          editorData={data}
+          effects={{}}
           autoScroll={true}
           onScroll={(p) => setScrollLeft(p.scrollLeft)}
-          style={{ width: "100%", height: "100%" }} 
+          style={{ width: "100%", height: "100%" }}
         />
         {loopOn && (
           <LoopZoneOverlay
@@ -158,6 +157,7 @@ const player = useTimelinePlayer(timelineRef);
 ```
 
 <Callout type="info">
-  See the [Transport Bar API Reference](/docs/timeline-editor/api-reference/transport-bar) for the
-  full props and return types of both `TransportBar` and `useTimelinePlayer`.
+  See the [Transport Bar API
+  Reference](/docs/timeline-editor/api-reference/transport-bar) for the full
+  props and return types of both `TransportBar` and `useTimelinePlayer`.
 </Callout>

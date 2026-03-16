@@ -11,17 +11,17 @@ export interface TimelineRow {
   actions: TimelineAction[];
   classNames?: string[];
   selected?: boolean;
-  flexy?: boolean;
+  rowHeight?: number;
 }
 ```
 
-| Property | Type | Required | Description |
-|:---|:---|:---|:---|
-| `id` | `string` | ✅ | Unique row identifier |
-| `actions` | `TimelineAction[]` | ✅ | List of action blocks in this row |
-| `classNames` | `string[]` | — | Additional CSS classes for the row element |
-| `selected` | `boolean` | — | Visual selected state |
-| `flexy` | `boolean` | — | Override the global `rowHeight` for this row |
+| Property     | Type               | Required | Description                                  |
+| :----------- | :----------------- | :------- | :------------------------------------------- |
+| `id`         | `string`           | ✅       | Unique row identifier                        |
+| `actions`    | `TimelineAction[]` | ✅       | List of action blocks in this row            |
+| `classNames` | `string[]`         | —        | Additional CSS classes for the row element   |
+| `selected`   | `boolean`          | —        | Visual selected state                        |
+| `rowHeight`  | `number`           | —        | Override the global `rowHeight` for this row |
 
 ---
 
@@ -35,6 +35,8 @@ export interface TimelineAction {
   effectId: string;
   movable?: boolean;
   flexible?: boolean;
+  disabled?: boolean;
+  selected?: boolean;
   minStart?: number;
   maxEnd?: number;
   style?: React.CSSProperties;
@@ -43,19 +45,21 @@ export interface TimelineAction {
 }
 ```
 
-| Property | Type | Required | Default | Description |
-|:---|:---|:---|:---|:---|
-| `id` | `string` | ✅ | — | Unique action identifier |
-| `start` | `number` | ✅ | — | Start time in seconds |
-| `end` | `number` | ✅ | — | End time in seconds |
-| `effectId` | `string` | ✅ | — | ID of the effect that governs this action |
-| `movable` | `boolean` | — | `true` | If `false`, cannot be dragged horizontally |
-| `flexible` | `boolean` | — | `true` | If `false`, cannot be resized |
-| `minStart` | `number` | — | — | Minimum allowed start time (clamps dragging) |
-| `maxEnd` | `number` | — | — | Maximum allowed end time (clamps dragging) |
-| `style` | `CSSProperties` | — | — | Inline style for the block element |
-| `className` | `string` | — | — | Additional CSS class |
-| `data` | `any` | — | — | Custom metadata payload |
+| Property    | Type            | Required | Default | Description                                  |
+| :---------- | :-------------- | :------- | :------ | :------------------------------------------- |
+| `id`        | `string`        | ✅       | —       | Unique action identifier                     |
+| `start`     | `number`        | ✅       | —       | Start time in seconds                        |
+| `end`       | `number`        | ✅       | —       | End time in seconds                          |
+| `effectId`  | `string`        | ✅       | —       | ID of the effect that governs this action    |
+| `movable`   | `boolean`       | —        | `true`  | If `false`, cannot be dragged horizontally   |
+| `flexible`  | `boolean`       | —        | `true`  | If `false`, cannot be resized                |
+| `disabled`  | `boolean`       | —        | `false` | Visual disabled state                        |
+| `selected`  | `boolean`       | —        | `false` | Visual selected state                        |
+| `minStart`  | `number`        | —        | —       | Minimum allowed start time (clamps dragging) |
+| `maxEnd`    | `number`        | —        | —       | Maximum allowed end time (clamps dragging)   |
+| `style`     | `CSSProperties` | —        | —       | Inline style for the block element           |
+| `className` | `string`        | —        | —       | Additional CSS class                         |
+| `data`      | `any`           | —        | —       | Custom metadata payload                      |
 
 ---
 
@@ -85,20 +89,20 @@ export interface EffectSourceParams {
 }
 ```
 
-| Callback | When it fires | Can return `false`? |
-|:---|:---|:---|
-| `start` | Playback begins while cursor is **inside** the action | No |
-| `enter` | Playhead **crosses into** the action | No |
-| `update` | Every tick **while inside** the action | No |
-| `leave` | Playhead **crosses out** of the action | No |
-| `stop` | Playback is **paused inside** the action | No |
+| Callback | When it fires                                         | Can return `false`? |
+| :------- | :---------------------------------------------------- | :------------------ |
+| `start`  | Playback begins while cursor is **inside** the action | No                  |
+| `enter`  | Playhead **crosses into** the action                  | No                  |
+| `update` | Every tick **while inside** the action                | No                  |
+| `leave`  | Playhead **crosses out** of the action                | No                  |
+| `stop`   | Playback is **paused inside** the action              | No                  |
 
 ---
 
 ## Complete Example
 
 ```typescript
-import { TimelineRow, TimelineEffect } from '@keplar-404/react-timeline-editor';
+import { TimelineRow, TimelineEffect } from "@keplar-404/react-timeline-editor";
 
 // Extend TimelineAction for custom data
 interface MyAction extends TimelineAction {
@@ -110,15 +114,15 @@ interface MyAction extends TimelineAction {
 
 const effects: Record<string, TimelineEffect> = {
   audio: {
-    id: 'audio',
-    name: 'Play Audio',
+    id: "audio",
+    name: "Play Audio",
     source: {
       enter: ({ action, time }) => {
         // Start playing audio at (time - action.start) offset
-        console.log('Starting audio:', (action as MyAction).data.src);
+        console.log("Starting audio:", (action as MyAction).data.src);
       },
       leave: ({ action }) => {
-        console.log('Stopping audio:', (action as MyAction).data.src);
+        console.log("Stopping audio:", (action as MyAction).data.src);
       },
     },
   },
@@ -126,14 +130,14 @@ const effects: Record<string, TimelineEffect> = {
 
 const editorData: TimelineRow[] = [
   {
-    id: 'audio-track',
+    id: "audio-track",
     actions: [
       {
-        id: 'audio-clip-1',
+        id: "audio-clip-1",
         start: 0,
         end: 10,
-        effectId: 'audio',
-        data: { name: 'Background Music', src: '/audio/bg.mp3' },
+        effectId: "audio",
+        data: { name: "Background Music", src: "/audio/bg.mp3" },
       } as MyAction,
     ],
   },

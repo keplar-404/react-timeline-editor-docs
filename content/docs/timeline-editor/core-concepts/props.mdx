@@ -7,72 +7,72 @@ import { Callout } from "fumadocs-ui/components/callout";
 
 ## Required Props
 
-| Property | Type | Description |
-|:---|:---|:---|
-| `editorData` | `TimelineRow[]` | **(Required)** Timeline editing data — the list of track rows |
-| `effects` | `Record<string, TimelineEffect>` | **(Required)** Map of all possible effect instances |
+| Property     | Type                             | Description                                                   |
+| :----------- | :------------------------------- | :------------------------------------------------------------ |
+| `editorData` | `TimelineRow[]`                  | **(Required)** Timeline editing data — the list of track rows |
+| `effects`    | `Record<string, TimelineEffect>` | **(Required)** Map of all possible effect instances           |
 
 ---
 
 ## Scroll & Layout
 
-| Property | Type | Default | Description |
-|:---|:---|:---|:---|
-| `autoScroll` | `boolean` | `false` | Enable auto-scroll during dragging near edges |
-| `style` | `CSSProperties` | `--` | Custom inline style for the timeline wrapper |
-| `onScroll` | `(params: OnScrollParams) => void` | `--` | Scroll callback — use to sync sidebars |
-| `scrollTop` | `number` | `--` | **@deprecated** — use `ref.setScrollTop` instead |
+| Property     | Type                               | Default | Description                                      |
+| :----------- | :--------------------------------- | :------ | :----------------------------------------------- |
+| `autoScroll` | `boolean`                          | `false` | Enable auto-scroll during dragging near edges    |
+| `style`      | `CSSProperties`                    | `--`    | Custom inline style for the timeline wrapper     |
+| `onScroll`   | `(params: OnScrollParams) => void` | `--`    | Scroll callback — use to sync sidebars           |
+| `scrollTop`  | `number`                           | `--`    | **@deprecated** — use `ref.setScrollTop` instead |
 
 ---
 
 ## Scale & Display
 
-| Property | Type | Default | Description |
-|:---|:---|:---|:---|
-| `scale` | `number` | `1` | Duration (seconds) represented by one scale mark (`>0`) |
-| `scaleWidth` | `number` | `160` | Display width (px) of one scale mark (`>0`) |
-| `scaleSplitCount` | `number` | `10` | Number of subdivisions per scale mark (`>0` integer) |
-| `minScaleCount` | `number` | `20` | Minimum number of scale marks shown (`>=1`) |
-| `maxScaleCount` | `number` | `Infinity` | Maximum number of scale marks (`>=minScaleCount`) |
-| `startLeft` | `number` | `20` | Left padding before the scale starts (px, `>=0`) |
-| `rowHeight` | `number` | `32` | Height of each row (px, `>0`) |
+| Property          | Type     | Default    | Description                                             |
+| :---------------- | :------- | :--------- | :------------------------------------------------------ |
+| `scale`           | `number` | `1`        | Duration (seconds) represented by one scale mark (`>0`) |
+| `scaleWidth`      | `number` | `160`      | Display width (px) of one scale mark (`>0`)             |
+| `scaleSplitCount` | `number` | `10`       | Number of subdivisions per scale mark (`>0` integer)    |
+| `minScaleCount`   | `number` | `20`       | Minimum number of scale marks shown (`>=1`)             |
+| `maxScaleCount`   | `number` | `Infinity` | Maximum number of scale marks (`>=minScaleCount`)       |
+| `startLeft`       | `number` | `20`       | Left padding before the scale starts (px, `>=0`)        |
+| `rowHeight`       | `number` | `32`       | Height of each row (px, `>0`)                           |
 
 ---
 
 ## Behavior & Interaction
 
-| Property | Type | Default | Description |
-|:---|:---|:---|:---|
-| `gridSnap` | `boolean` | `false` | Snap action blocks to grid subdivisions |
-| `dragLine` | `boolean` | `false` | Show auxiliary snap lines while dragging |
-| `hideCursor` | `boolean` | `false` | Hide the playback cursor line |
-| `disableDrag` | `boolean` | `false` | Lock all action blocks — no dragging or resizing |
-| `autoReRender` | `boolean` | `true` | Auto re-render when data or cursor time changes |
+| Property       | Type      | Default | Description                                      |
+| :------------- | :-------- | :------ | :----------------------------------------------- |
+| `gridSnap`     | `boolean` | `false` | Snap action blocks to grid subdivisions          |
+| `dragLine`     | `boolean` | `false` | Show auxiliary snap lines while dragging         |
+| `hideCursor`   | `boolean` | `false` | Hide the playback cursor line                    |
+| `disableDrag`  | `boolean` | `false` | Lock all action blocks — no dragging or resizing |
+| `autoReRender` | `boolean` | `true`  | Auto re-render when data or cursor time changes  |
 
 ---
 
 ## Engine
 
-| Property | Type | Default | Description |
-|:---|:---|:---|:---|
+| Property | Type             | Default  | Description                                |
+| :------- | :--------------- | :------- | :----------------------------------------- |
 | `engine` | `TimelineEngine` | built-in | Provide a custom `TimelineEngine` instance |
 
 ---
 
 ## Data Change
 
-| Property | Type | Default | Description |
-|:---|:---|:---|:---|
-| `onChange` | `(editorData: TimelineRow[]) => boolean \| void` | `--` | Fired when an action operation ends. Return `false` to prevent automatic engine synchronization |
+| Property   | Type                                             | Default | Description                                                                                     |
+| :--------- | :----------------------------------------------- | :------ | :---------------------------------------------------------------------------------------------- |
+| `onChange` | `(editorData: TimelineRow[]) => boolean \| void` | `--`    | Fired when an action operation ends. Return `false` to prevent automatic engine synchronization |
 
 ---
 
 ## Custom Renderers
 
-| Property | Type | Description |
-|:---|:---|:---|
-| `getActionRender` | `(action: TimelineAction, row: TimelineRow) => ReactNode` | Custom render function for action blocks |
-| `getScaleRender` | `(scale: number) => ReactNode` | Custom render function for scale ruler marks |
+| Property          | Type                                                      | Description                                  |
+| :---------------- | :-------------------------------------------------------- | :------------------------------------------- |
+| `getActionRender` | `(action: TimelineAction, row: TimelineRow) => ReactNode` | Custom render function for action blocks     |
+| `getScaleRender`  | `(scale: number) => ReactNode`                            | Custom render function for scale ruler marks |
 
 ---
 
@@ -80,65 +80,66 @@ import { Callout } from "fumadocs-ui/components/callout";
 
 These props are exclusive to `@keplar-404/react-timeline-editor`:
 
-| Property | Type | Default | Description |
-|:---|:---|:---|:---|
-| `enableRowDrag` | `boolean` | `false` | Enable dragging to reorder entire track rows |
-| `enableCrossRowDrag` | `boolean` | `false` | Enable dragging action blocks between different rows |
-| `getGhostPreview` | `({ action, row }) => ReactNode` | `--` | Custom ghost preview during cross-row drag |
+| Property             | Type                             | Default | Description                                                                   |
+| :------------------- | :------------------------------- | :------ | :---------------------------------------------------------------------------- |
+| `enableRowDrag`      | `boolean`                        | `false` | Enable dragging to reorder entire track rows                                  |
+| `enableCrossRowDrag` | `boolean`                        | `false` | Enable dragging action blocks between different rows                          |
+| `enableGhostPreview` | `boolean`                        | `true`  | Show a ghost/preview element following the cursor during cross-row block drag |
+| `getGhostPreview`    | `({ action, row }) => ReactNode` | `--`    | Custom ghost preview during cross-row drag                                    |
 
 ---
 
 ## Action Move Callbacks
 
-| Property | Type | Description |
-|:---|:---|:---|
-| `onActionMoveStart` | `(params: { action, row }) => void` | Fired when a block starts moving |
-| `onActionMoving` | `(params: { action, row, start, end }) => boolean \| void` | Fired during movement — return `false` to cancel |
-| `onActionMoveEnd` | `(params: { action, row, start, end }) => void` | Fired when movement ends |
+| Property            | Type                                                       | Description                                      |
+| :------------------ | :--------------------------------------------------------- | :----------------------------------------------- |
+| `onActionMoveStart` | `(params: { action, row }) => void`                        | Fired when a block starts moving                 |
+| `onActionMoving`    | `(params: { action, row, start, end }) => boolean \| void` | Fired during movement — return `false` to cancel |
+| `onActionMoveEnd`   | `(params: { action, row, start, end }) => void`            | Fired when movement ends                         |
 
 ---
 
 ## Action Resize Callbacks
 
-| Property | Type | Description |
-|:---|:---|:---|
-| `onActionResizeStart` | `(params: { action, row, dir }) => void` | Fired when resize starts |
-| `onActionResizing` | `(params: { action, row, start, end, dir }) => boolean \| void` | Fired during resizing — return `false` to cancel |
-| `onActionResizeEnd` | `(params: { action, row, start, end, dir }) => void` | Fired when resize ends |
+| Property              | Type                                                            | Description                                      |
+| :-------------------- | :-------------------------------------------------------------- | :----------------------------------------------- |
+| `onActionResizeStart` | `(params: { action, row, dir }) => void`                        | Fired when resize starts                         |
+| `onActionResizing`    | `(params: { action, row, start, end, dir }) => boolean \| void` | Fired during resizing — return `false` to cancel |
+| `onActionResizeEnd`   | `(params: { action, row, start, end, dir }) => void`            | Fired when resize ends                           |
 
 ---
 
 ## Click & Context Callbacks
 
-| Property | Type | Description |
-|:---|:---|:---|
-| `onClickRow` | `(e, { row, time }) => void` | Row single-click |
-| `onClickAction` | `(e, { action, row, time }) => void` | Action block single-click |
-| `onClickActionOnly` | `(e, { action, row, time }) => void` | Action click — **not** fired when a drag was triggered |
-| `onDoubleClickRow` | `(e, { row, time }) => void` | Row double-click |
-| `onDoubleClickAction` | `(e, { action, row, time }) => void` | Action block double-click |
-| `onContextMenuRow` | `(e, { row, time }) => void` | Row right-click |
-| `onContextMenuAction` | `(e, { action, row, time }) => void` | Action right-click |
+| Property              | Type                                 | Description                                            |
+| :-------------------- | :----------------------------------- | :----------------------------------------------------- |
+| `onClickRow`          | `(e, { row, time }) => void`         | Row single-click                                       |
+| `onClickAction`       | `(e, { action, row, time }) => void` | Action block single-click                              |
+| `onClickActionOnly`   | `(e, { action, row, time }) => void` | Action click — **not** fired when a drag was triggered |
+| `onDoubleClickRow`    | `(e, { row, time }) => void`         | Row double-click                                       |
+| `onDoubleClickAction` | `(e, { action, row, time }) => void` | Action block double-click                              |
+| `onContextMenuRow`    | `(e, { row, time }) => void`         | Row right-click                                        |
+| `onContextMenuAction` | `(e, { action, row, time }) => void` | Action right-click                                     |
 
 ---
 
 ## Row Drag Callbacks
 
-| Property | Type | Description |
-|:---|:---|:---|
-| `onRowDragStart` | `({ row }) => void` | Fired when a row drag starts |
-| `onRowDragEnd` | `({ row, editorData }) => void` | Fired when a row drag drop completes — `editorData` is the reordered array |
+| Property         | Type                            | Description                                                                |
+| :--------------- | :------------------------------ | :------------------------------------------------------------------------- |
+| `onRowDragStart` | `({ row }) => void`             | Fired when a row drag starts                                               |
+| `onRowDragEnd`   | `({ row, editorData }) => void` | Fired when a row drag drop completes — `editorData` is the reordered array |
 
 ---
 
 ## Cursor Callbacks
 
-| Property | Type | Description |
-|:---|:---|:---|
-| `onCursorDragStart` | `(time: number) => void` | Fired when cursor drag begins |
-| `onCursorDragEnd` | `(time: number) => void` | Fired when cursor drag ends |
-| `onCursorDrag` | `(time: number) => void` | Fired continuously while cursor is dragged |
-| `onClickTimeArea` | `(time, e) => boolean` | Time ruler click — return `false` to block cursor movement |
+| Property            | Type                     | Description                                                |
+| :------------------ | :----------------------- | :--------------------------------------------------------- |
+| `onCursorDragStart` | `(time: number) => void` | Fired when cursor drag begins                              |
+| `onCursorDragEnd`   | `(time: number) => void` | Fired when cursor drag ends                                |
+| `onCursorDrag`      | `(time: number) => void` | Fired continuously while cursor is dragged                 |
+| `onClickTimeArea`   | `(time, e) => boolean`   | Time ruler click — return `false` to block cursor movement |
 
 ---
 
@@ -151,18 +152,18 @@ const timelineRef = useRef<TimelineState>(null);
 <Timeline ref={timelineRef} ... />
 ```
 
-| Member | Type | Description |
-|:---|:---|:---|
-| `target` | `HTMLElement \| null` | The underlying DOM node |
-| `listener` | `Emitter<EventTypes>` | Engine event emitter — use `.on(...)` to subscribe |
-| `isPlaying` | `boolean` | Whether timeline is currently playing |
-| `isPaused` | `boolean` | Whether timeline is paused |
-| `setTime(time)` | `(time: number) => void` | Move cursor to specific time |
-| `getTime()` | `() => number` | Get current cursor time |
-| `setPlayRate(rate)` | `(rate: number) => void` | Set playback speed multiplier |
-| `getPlayRate()` | `() => number` | Get current playback rate |
-| `reRender()` | `() => void` | Re-render at current time without playing |
-| `play(param)` | `(param?: { toTime?, autoEnd?, runActionIds? }) => boolean` | Start playback |
-| `pause()` | `() => void` | Pause playback |
-| `setScrollLeft(val)` | `(val: number) => void` | Programmatic horizontal scroll |
-| `setScrollTop(val)` | `(val: number) => void` | Programmatic vertical scroll |
+| Member               | Type                                                        | Description                                        |
+| :------------------- | :---------------------------------------------------------- | :------------------------------------------------- |
+| `target`             | `HTMLElement \| null`                                       | The underlying DOM node                            |
+| `listener`           | `Emitter<EventTypes>`                                       | Engine event emitter — use `.on(...)` to subscribe |
+| `isPlaying`          | `boolean`                                                   | Whether timeline is currently playing              |
+| `isPaused`           | `boolean`                                                   | Whether timeline is paused                         |
+| `setTime(time)`      | `(time: number) => void`                                    | Move cursor to specific time                       |
+| `getTime()`          | `() => number`                                              | Get current cursor time                            |
+| `setPlayRate(rate)`  | `(rate: number) => void`                                    | Set playback speed multiplier                      |
+| `getPlayRate()`      | `() => number`                                              | Get current playback rate                          |
+| `reRender()`         | `() => void`                                                | Re-render at current time without playing          |
+| `play(param)`        | `(param?: { toTime?, autoEnd?, runActionIds? }) => boolean` | Start playback                                     |
+| `pause()`            | `() => void`                                                | Pause playback                                     |
+| `setScrollLeft(val)` | `(val: number) => void`                                     | Programmatic horizontal scroll                     |
+| `setScrollTop(val)`  | `(val: number) => void`                                     | Programmatic vertical scroll                       |

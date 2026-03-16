@@ -19,38 +19,40 @@ Try dragging the block in the top row near the `2s` mark — it will snap to ali
 Enable this feature by setting `dragLine={true}`:
 
 ```tsx
-import { Timeline, TimelineRow, TimelineEffect } from '@keplar-404/react-timeline-editor';
-import React, { useState } from 'react';
+import {
+  Timeline,
+  TimelineRow,
+  TimelineEffect,
+} from "@keplar-404/react-timeline-editor";
+import React, { useState } from "react";
 
 const mockData: TimelineRow[] = [
   {
-    id: '0',
-    actions: [
-      { id: 'action01', start: 0, end: 2, effectId: 'effect0' },
-    ],
+    id: "0",
+    actions: [{ id: "action01", start: 0, end: 2, effectId: "effect0" }],
   },
   {
-    id: '1',
+    id: "1",
     actions: [
       {
-        id: 'action10',
+        id: "action10",
         start: 2, // Dragging an action near 2s will snap perfectly to this block's edge
         end: 4,
-        effectId: 'effect0',
+        effectId: "effect0",
       },
     ],
   },
 ];
 
 const mockEffect: Record<string, TimelineEffect> = {
-  effect0: { id: 'effect0', name: 'Effect 0' },
+  effect0: { id: "effect0", name: "Effect 0" },
 };
 
 export const EditorAuxiliarySnap = () => {
   const [data, setData] = useState(mockData);
 
   return (
-    <div style={{ width: '100%', height: '400px' }}>
+    <div style={{ width: "100%", height: "400px" }}>
       <Timeline
         editorData={data}
         effects={mockEffect}
@@ -68,16 +70,14 @@ export const EditorAuxiliarySnap = () => {
 By default, all actions (except the one being dragged) are used as snap targets. Use `getAssistDragLineActionIds` to override which action IDs are used:
 
 ```tsx
-<div style={{ width: '100%', height: '400px' }}>
+<div style={{ width: "100%", height: "400px" }}>
   <Timeline
     editorData={data}
     effects={mockEffect}
     dragLine={true}
     getAssistDragLineActionIds={({ action, editorData, row }) => {
       // Only snap to actions in the same row
-      return row.actions
-        .filter((a) => a.id !== action.id)
-        .map((a) => a.id);
+      return row.actions.filter((a) => a.id !== action.id).map((a) => a.id);
     }}
     style={{ width: "100%", height: "100%" }}
   />
@@ -85,6 +85,6 @@ By default, all actions (except the one being dragged) are used as snap targets.
 ```
 
 <Callout type="tip">
-  You can combine `gridSnap` and `dragLine` together. Grid snap takes priority, but
-  auxiliary lines still appear as a visual aid.
+  You can combine `gridSnap` and `dragLine` together. Grid snap takes priority,
+  but auxiliary lines still appear as a visual aid.
 </Callout>

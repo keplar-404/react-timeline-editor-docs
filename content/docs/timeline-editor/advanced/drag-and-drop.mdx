@@ -4,7 +4,10 @@ description: Enable drag-to-reorder entire tracks and drag action blocks between
 ---
 
 import { Callout } from "fumadocs-ui/components/callout";
-import { RowDragPreview, CrossRowDragPreview } from "@/components/timeline-preview";
+import {
+  RowDragPreview,
+  CrossRowDragPreview,
+} from "@/components/timeline-preview";
 
 The `@keplar-404/react-timeline-editor` introduces two powerful drag-and-drop features:
 
@@ -20,13 +23,17 @@ The `@keplar-404/react-timeline-editor` introduces two powerful drag-and-drop fe
 Enable row drag sorting by setting `enableRowDrag={true}`. The engine calculates the new sorted order and provides it in `onRowDragEnd`:
 
 ```tsx
-import { Timeline, TimelineRow, TimelineEffect } from '@keplar-404/react-timeline-editor';
-import React, { useState } from 'react';
+import {
+  Timeline,
+  TimelineRow,
+  TimelineEffect,
+} from "@keplar-404/react-timeline-editor";
+import React, { useState } from "react";
 
 const mockData: TimelineRow[] = [
-  { id: 'Track A', actions: [] },
-  { id: 'Track B', actions: [] },
-  { id: 'Track C', actions: [] },
+  { id: "Track A", actions: [] },
+  { id: "Track B", actions: [] },
+  { id: "Track C", actions: [] },
 ];
 
 export const EditorRowDrag = () => {
@@ -40,7 +47,7 @@ export const EditorRowDrag = () => {
         onChange={setData}
         enableRowDrag={true}
         onRowDragStart={({ row }) => {
-          console.log('Started dragging row:', row.id);
+          console.log("Started dragging row:", row.id);
         }}
         onRowDragEnd={({ row, editorData }) => {
           // The engine provides the updated sorted array — just set it!
@@ -54,8 +61,9 @@ export const EditorRowDrag = () => {
 ```
 
 <Callout type="info">
-  The `onRowDragEnd` callback receives `editorData` — the **new sorted array** after the drop.
-  You don't need to manually reorder the array; just call `setData(editorData)`.
+  The `onRowDragEnd` callback receives `editorData` — the **new sorted array**
+  after the drop. You don't need to manually reorder the array; just call
+  `setData(editorData)`.
 </Callout>
 
 ## Cross-Row Block Dragging
@@ -120,7 +128,7 @@ Use `getGhostPreview` to render a fully custom ghost that matches your block's a
 ```
 
 <Callout type="tip">
-  For the best user experience, render the **same content** in both `getActionRender` and
-  `getGhostPreview`. This creates a smooth visual continuity between the real block and
-  the ghost following the cursor.
+  For the best user experience, render the **same content** in both
+  `getActionRender` and `getGhostPreview`. This creates a smooth visual
+  continuity between the real block and the ghost following the cursor.
 </Callout>

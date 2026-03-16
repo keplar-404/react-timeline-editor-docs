@@ -417,7 +417,7 @@ export function CutBlockPreview() {
   const scaleWidth = 160;
   const startLeft = 20;
   const rowHeight = 32;
-  const editAreaTopOffset = 32;
+  const editAreaTopOffset = 42;
 
   const handleCut = (rowId: string, actionId: string, cutTime: number) => {
     const newData = splitActionInRow(data, rowId, actionId, cutTime);

@@ -21,15 +21,15 @@ The `<Timeline>` maintains a ghost preview wrapper `div` internally:
 The best pattern is to use the **same render function** for both the real block and the ghost:
 
 ```tsx
-import { Timeline, TimelineRow } from '@keplar-404/react-timeline-editor';
-import React, { useState } from 'react';
+import { Timeline, TimelineRow } from "@keplar-404/react-timeline-editor";
+import React, { useState } from "react";
 
 const mockData: TimelineRow[] = [
   {
-    id: 'track-1',
-    actions: [{ id: 'action-1', start: 0, end: 2, effectId: 'effect0' }],
+    id: "track-1",
+    actions: [{ id: "action-1", start: 0, end: 2, effectId: "effect0" }],
   },
-  { id: 'track-2', actions: [] },
+  { id: "track-2", actions: [] },
 ];
 
 // Shared render function — used for both real block and ghost
@@ -94,6 +94,6 @@ getGhostPreview?: (params: {
 You can use `action.effectId`, `action.data`, or any field to render the right preview for each block type.
 
 <Callout type="tip">
-  If your actions have custom `data` attached (e.g., asset thumbnails), you can surface that
-  in the ghost preview for a highly polished editing experience.
+  If your actions have custom `data` attached (e.g., asset thumbnails), you can
+  surface that in the ghost preview for a highly polished editing experience.
 </Callout>

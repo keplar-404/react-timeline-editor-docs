@@ -17,8 +17,8 @@ The `LoopZoneOverlay` renders a draggable repeat region on top of your `<Timelin
 `LoopZoneOverlay` must be mounted as a **sibling** to `<Timeline>` inside a `position: relative` wrapper, and receive the **same geometry props** (`scale`, `scaleWidth`, `startLeft`) as the `<Timeline>`.
 
 ```tsx
-import React, { useState } from 'react';
-import { Timeline, LoopZoneOverlay } from '@keplar-404/react-timeline-editor';
+import React, { useState } from "react";
+import { Timeline, LoopZoneOverlay } from "@keplar-404/react-timeline-editor";
 
 export const EditorLoopZone = () => {
   const [loopOn, setLoopOn] = useState(true);
@@ -32,7 +32,7 @@ export const EditorLoopZone = () => {
   const startLeft = 20;
 
   return (
-    <div style={{ position: 'relative' }}>
+    <div style={{ position: "relative" }}>
       <Timeline
         scale={scale}
         scaleWidth={scaleWidth}
@@ -53,7 +53,7 @@ export const EditorLoopZone = () => {
           onLoopStartChange={setLoopStart}
           onLoopEndChange={setLoopEnd}
           config={{
-            bandColor: '#10b981',
+            bandColor: "#10b981",
             bandOpacity: 0.1,
             showBoundaryLines: true,
           }}
@@ -66,11 +66,14 @@ export const EditorLoopZone = () => {
 
 ## Configuration (`LoopZoneConfig`)
 
-| Option | Type | Default | Description |
-|:---|:---|:---|:---|
-| `bandColor` | `string` | `'#3b82f6'` | CSS color for the loop region highlight |
-| `bandOpacity` | `number` | `0.1` | Opacity of the loop highlight (0–1) |
-| `showBoundaryLines` | `boolean` | `true` | Show dashed vertical lines at loop edges |
+| Option              | Type      | Default                     | Description                                                                                                                             |
+| :------------------ | :-------- | :-------------------------- | :-------------------------------------------------------------------------------------------------------------------------------------- |
+| `bandColor`         | `string`  | `'#10b981'`                 | CSS color for the loop region highlight                                                                                                 |
+| `bandOpacity`       | `number`  | `0.07`                      | Opacity of the loop highlight (0–1)                                                                                                     |
+| `bandBorderColor`   | `string`  | —                           | Border/stripe color used on the band's edges and stripe pattern. Falls back to `bandColor` when not set.                                |
+| `handleColor`       | `string`  | —                           | CSS color of the default drag handle grip pills. Falls back to `bandColor` when not set. Has no effect when `renderHandle` is provided. |
+| `showBoundaryLines` | `boolean` | `true`                      | Show dashed vertical lines at loop edges                                                                                                |
+| `boundaryLineColor` | `string`  | `'rgba(16, 185, 129, 0.4)'` | CSS color of the dashed boundary lines.                                                                                                 |
 
 ## Custom Handle Renderer
 
@@ -103,6 +106,7 @@ const player = useTimelinePlayer(timelineRef, {
 ```
 
 <Callout type="info">
-  See the full [Loop Zone API Reference](/docs/timeline-editor/api-reference/loop-zone) for all
-  available props.
+  See the full [Loop Zone API
+  Reference](/docs/timeline-editor/api-reference/loop-zone) for all available
+  props.
 </Callout>

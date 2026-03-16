@@ -18,25 +18,29 @@ Try dragging one of the action blocks — it will snap to precise grid positions
 Enable grid snapping by passing `gridSnap={true}`:
 
 ```tsx
-import { Timeline, TimelineRow, TimelineEffect } from '@keplar-404/react-timeline-editor';
-import React, { useState } from 'react';
+import {
+  Timeline,
+  TimelineRow,
+  TimelineEffect,
+} from "@keplar-404/react-timeline-editor";
+import React, { useState } from "react";
 
 const mockData: TimelineRow[] = [
   {
-    id: '0',
+    id: "0",
     actions: [
       {
-        id: 'action00',
+        id: "action00",
         start: 0,
         end: 2,
-        effectId: 'effect0',
+        effectId: "effect0",
       },
     ],
   },
 ];
 
 const mockEffect: Record<string, TimelineEffect> = {
-  effect0: { id: 'effect0', name: 'Effect 0' },
+  effect0: { id: "effect0", name: "Effect 0" },
 };
 
 export const EditorGridSnap = () => {
@@ -49,7 +53,7 @@ export const EditorGridSnap = () => {
         effects={mockEffect}
         onChange={setData}
         gridSnap={true}
-        scaleSplitCount={10}  // Will snap in 1/10th of a scale unit increments
+        scaleSplitCount={10} // Will snap in 1/10th of a scale unit increments
         style={{ width: "100%", height: "100%" }}
       />
     </div>
@@ -68,8 +72,8 @@ snapInterval = scale / scaleSplitCount
 With the defaults (`scale=1`, `scaleSplitCount=10`), blocks snap every `0.1` seconds. Increase `scaleSplitCount` for finer snapping or decrease it for coarser snapping.
 
 | `scaleSplitCount` | Snap interval (with `scale=1`) |
-|:---|:---|
-| `4` | Every 0.25s |
-| `10` | Every 0.1s |
-| `20` | Every 0.05s |
-| `100` | Every 0.01s |
+| :---------------- | :----------------------------- |
+| `4`               | Every 0.25s                    |
+| `10`              | Every 0.1s                     |
+| `20`              | Every 0.05s                    |
+| `100`             | Every 0.01s                    |

@@ -14,21 +14,25 @@ The timeline's scale ruler is fully configurable. You can build dynamic zoom con
 
 ## Key Scale Props
 
-| Prop | Type | Default | Description |
-|:---|:---|:---|:---|
-| `scale` | `number` | `1` | How many **seconds** each tick mark represents |
-| `scaleWidth` | `number` | `160` | How many **pixels** wide each tick mark is |
-| `scaleSplitCount` | `number` | `10` | How many **subdivisions** each tick is split into |
+| Prop              | Type     | Default | Description                                       |
+| :---------------- | :------- | :------ | :------------------------------------------------ |
+| `scale`           | `number` | `1`     | How many **seconds** each tick mark represents    |
+| `scaleWidth`      | `number` | `160`   | How many **pixels** wide each tick mark is        |
+| `scaleSplitCount` | `number` | `10`    | How many **subdivisions** each tick is split into |
 
 ## Zoom Control Example
 
 By letting the user control `scale` and `scaleWidth`, you get a fully interactive zoom UI:
 
 ```tsx
-import { Timeline, TimelineRow, TimelineEffect } from '@keplar-404/react-timeline-editor';
-import React, { useState } from 'react';
+import {
+  Timeline,
+  TimelineRow,
+  TimelineEffect,
+} from "@keplar-404/react-timeline-editor";
+import React, { useState } from "react";
 
-const mockData: TimelineRow[] = [{ id: '0', actions: [] }];
+const mockData: TimelineRow[] = [{ id: "0", actions: [] }];
 const mockEffect: Record<string, TimelineEffect> = {};
 
 export const EditorScale = () => {
@@ -43,7 +47,9 @@ export const EditorScale = () => {
           Scale (Zoom): {scale}s
           <input
             type="range"
-            min="1" max="10" step="1"
+            min="1"
+            max="10"
+            step="1"
             value={scale}
             onChange={(e) => setScale(Number(e.target.value))}
           />
@@ -52,7 +58,9 @@ export const EditorScale = () => {
           Scale Width (px): {scaleWidth}
           <input
             type="range"
-            min="50" max="300" step="10"
+            min="50"
+            max="300"
+            step="10"
             value={scaleWidth}
             onChange={(e) => setScaleWidth(Number(e.target.value))}
           />
@@ -94,14 +102,12 @@ Use `getScaleRender` to fully replace the ruler tick labels with any React node:
   editorData={data}
   effects={mockEffect}
   getScaleRender={(scale) => (
-    <div style={{ fontSize: '10px', color: '#888' }}>
-      {`${scale}s`}
-    </div>
+    <div style={{ fontSize: "10px", color: "#888" }}>{`${scale}s`}</div>
   )}
 />
 ```
 
 <Callout type="tip">
-  A common pattern is to format the scale time as `MM:SS` instead of raw seconds.
-  This makes the ruler much more readable for longer timelines.
+  A common pattern is to format the scale time as `MM:SS` instead of raw
+  seconds. This makes the ruler much more readable for longer timelines.
 </Callout>

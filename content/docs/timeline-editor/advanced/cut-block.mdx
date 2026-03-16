@@ -56,39 +56,50 @@ export const EditorCutBlock = () => {
   };
 
   return (
-    <div style={{ position: "relative", width: "100%", height: "400px", display: "flex", flexDirection: "column" }}>
+    <div
+      style={{
+        position: "relative",
+        width: "100%",
+        height: "400px",
+        display: "flex",
+        flexDirection: "column",
+      }}
+    >
       <div style={{ flexShrink: 0, paddingBottom: "8px" }}>
-        <button className="bg-blue-600 text-white px-4 py-2 rounded" onClick={() => setIsCutMode(!isCutMode)}>
+        <button
+          className="bg-blue-600 text-white px-4 py-2 rounded"
+          onClick={() => setIsCutMode(!isCutMode)}
+        >
           {isCutMode ? "Disable Cut Blade" : "Enable Cut Blade (Hold C)"}
         </button>
       </div>
 
       <div style={{ flex: 1, position: "relative" }}>
         <Timeline
-        editorData={data}
-        effects={{}}
-        onChange={setData}
-        scale={scale}
-        scaleWidth={scaleWidth}
-        startLeft={startLeft}
-        rowHeight={rowHeight}
-        disableDrag={isCutMode} // Disable regular dragging while in cut mode
-        style={{ width: "100%", height: "100%" }}
-      />
+          editorData={data}
+          effects={{}}
+          onChange={setData}
+          scale={scale}
+          scaleWidth={scaleWidth}
+          startLeft={startLeft}
+          rowHeight={rowHeight}
+          disableDrag={isCutMode} // Disable regular dragging while in cut mode
+          style={{ width: "100%", height: "100%" }}
+        />
 
-      <CutOverlay
-        data={data}
-        scale={scale}
-        scaleSplitCount={scaleSplitCount}
-        scaleWidth={scaleWidth}
-        startLeft={startLeft}
-        rowHeight={rowHeight}
-        editAreaTopOffset={editAreaTopOffset}
-        gridSnap={false}
-        config={{ keyboardModifier: "c" }} // Activate with 'C' key
-        onModifierChange={setIsCutMode}
-        onCut={handleCut}
-      />
+        <CutOverlay
+          data={data}
+          scale={scale}
+          scaleSplitCount={scaleSplitCount}
+          scaleWidth={scaleWidth}
+          startLeft={startLeft}
+          rowHeight={rowHeight}
+          editAreaTopOffset={editAreaTopOffset}
+          gridSnap={false}
+          config={{ keyboardModifier: "c" }} // Activate with 'C' key
+          onModifierChange={setIsCutMode}
+          onCut={handleCut}
+        />
       </div>
     </div>
   );
@@ -108,16 +119,16 @@ Customize the blade's appearance via the `config` prop:
 <CutOverlay
   {/* ...required geometry props... */}
   config={{
-    bladeColor: '#3b82f6',               // Vertical blade line color
-    showPill: true,                        // Show floating time label
-    formatPillLabel: (time) => `${time.toFixed(1)}s`,  // Custom label format
-    pillColor: '#1e3a8a',                 // Label background
+    bladeColor: '#ef4444',                // Vertical blade line color
+    showPill: true,                       // Show floating time label
+    formatPillLabel: (time) => `✂ ${time.toFixed(2)}s`, // Custom label format
+    pillColor: '#ef4444',                 // Label background
     pillTextColor: '#ffffff',             // Label text color
     showBlockHighlight: true,             // Highlight hovered block
-    blockHighlightColor: 'rgba(59,130,246,0.15)',
-    blockHighlightBorderColor: 'rgba(59,130,246,0.4)',
-    cursor: 'crosshair',                  // Custom cursor
-    keyboardModifier: 'Shift',            // Hold Shift to activate
+    blockHighlightColor: 'rgba(239,68,68,0.08)', // Block highlight fill
+    blockHighlightBorderColor: 'rgba(239,68,68,0.3)', // Block highlight border
+    cursor: 'col-resize',                 // Custom CSS cursor
+    keyboardModifier: 'c',                // Hold 'c' key to activate
   }}
   onCut={handleCut}
 />
