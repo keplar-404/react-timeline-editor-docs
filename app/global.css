@@ -3,6 +3,22 @@
 @import 'fumadocs-ui/css/preset.css';
 @import '@keplar-404/react-timeline-editor/dist/react-timeline-editor.css';
 
+:root {
+  --glow-color: rgba(59, 130, 246, 0.2);
+  --grid-color: rgba(0, 0, 0, 0.08); /* Increased from 0.04 */
+  --glass-bg: rgba(255, 255, 255, 0.7);
+  --glass-border: rgba(0, 0, 0, 0.12);
+  --heading-gradient: linear-gradient(135deg, #000 0%, #444 100%); /* Stronger blacks */
+}
+
+.dark {
+  --glow-color: rgba(59, 130, 246, 0.5);
+  --grid-color: rgba(255, 255, 255, 0.05);
+  --glass-bg: rgba(255, 255, 255, 0.03);
+  --glass-border: rgba(255, 255, 255, 0.08);
+  --heading-gradient: linear-gradient(135deg, #fff 0%, #a5a5a5 100%);
+}
+
 .timeline-preview-container {
   border: 1px solid #333;
   border-radius: 6px;
@@ -13,10 +29,61 @@
   display: flex;
   flex-direction: column;
 }
+
 @media (max-width: 768px) {
   .timeline-preview-container {
     height: 300px;
   }
+}
+
+/* Redesign Utilities */
+
+.grid-background {
+  background-image: linear-gradient(to right, var(--grid-color) 1px, transparent 1px),
+    linear-gradient(to bottom, var(--grid-color) 1px, transparent 1px);
+  background-size: 40px 40px;
+}
+
+.mesh-glow {
+  position: absolute;
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 100%;
+  max-width: 800px;
+  height: 400px;
+  background: radial-gradient(circle at 50% 50%, var(--glow-color), transparent 70%);
+  filter: blur(80px);
+  opacity: 0.2;
+  pointer-events: none;
+  z-index: -1;
+}
+
+.dark .mesh-glow {
+  opacity: 0.15;
+}
+
+.glass-card {
+  background: var(--glass-bg);
+  backdrop-filter: blur(12px);
+  border: 1px solid var(--glass-border);
+}
+
+.glass-card:hover {
+  border-color: rgba(59, 130, 246, 0.4);
+  background: rgba(255, 255, 255, 0.8);
+}
+
+.dark .glass-card:hover {
+  border-color: rgba(59, 130, 246, 0.3);
+  background: rgba(255, 255, 255, 0.05);
+}
+
+.gradient-heading {
+  background: var(--heading-gradient);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
 }
 
 /* Override Transport Bar styling to increase height and size */
